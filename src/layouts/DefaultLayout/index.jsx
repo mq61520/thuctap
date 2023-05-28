@@ -1,7 +1,9 @@
-function DefaultLayout({children}) {
-    return <>
-        <div>{children}</div>
-    </>
+function DefaultLayout({ children }) {
+   return (
+      <>
+         <div className="page">{children}</div>
+      </>
+   );
 }
 
 export default DefaultLayout;
