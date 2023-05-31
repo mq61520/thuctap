@@ -10,9 +10,11 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './Login.module.scss';
 import './MUI.scss';
+import { changeLoginName, changeLoginPwd } from './authSlice';
 
 const cn = classNames.bind(styles);
 
@@ -20,13 +22,24 @@ function Login() {
    document.title = 'Đăng nhập';
 
    const [showPassword, setShowPassword] = useState(false);
-   const [name, setName] = useState('');
-   const [pwd, setPwd] = useState('');
+
+   const dispatch = useDispatch();
+   const auth = useSelector((state) => state.auth);
 
    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
    const handleMouseDownPassword = (event) => {
       event.preventDefault();
+   };
+
+   console.log(auth);
+
+   const handleAuth = () => {
+      if (auth.loginName === 'abc' && auth.loginPwd === '123') {
+         window.open('http://127.0.0.1:5173/', '_self');
+      } else {
+         alert('E');
+      }
    };
 
    return (
@@ -41,8 +54,11 @@ function Login() {
                   fullWidth
                   margin="normal"
                   size="large"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={auth.loginName}
+                  onChange={(e) => {
+                     const action = changeLoginName(e.target.value);
+                     dispatch(action);
+                  }}
                />
             </div>
 
@@ -64,8 +80,11 @@ function Login() {
                      </InputAdornment>
                   }
                   label="Password"
-                  value={pwd}
-                  onChange={(e) => setPwd(e.target.value)}
+                  value={auth.loginPwd}
+                  onChange={(e) => {
+                     const action = changeLoginPwd(e.target.value);
+                     dispatch(action);
+                  }}
                />
             </FormControl>
 
@@ -73,7 +92,7 @@ function Login() {
                <Button
                   variant="contained"
                   onClick={() => {
-                     alert(name + ' ' + pwd);
+                     handleAuth();
                   }}
                >
                   Đăng nhập
