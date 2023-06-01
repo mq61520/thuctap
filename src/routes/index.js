@@ -6,6 +6,6 @@ import Register from '../pages/Register';
 export const allPages = [
    { path: '/', component: Home },
    { path: '/search', component: Search },
-   { path: '/login', component: Login },
-   { path: '/register', component: Register },
+   { path: '/login', component: Login, layout: null },
+   { path: '/register', component: Register, layout: null },
 ];
