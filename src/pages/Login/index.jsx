@@ -11,10 +11,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import styles from './Login.module.scss';
 import './MUI.scss';
-import { changeLoginName, changeLoginPwd } from './authSlice';
+import { changeLoginName, changeLoginPwd } from '../../app/slices/authSlice';
 
 const cn = classNames.bind(styles);
 
@@ -35,16 +36,18 @@ function Login() {
    console.log(auth);
 
    const handleAuth = () => {
-      if (auth.loginName === 'abc' && auth.loginPwd === '123') {
+      if (auth.loginName === '' || auth.loginPwd === '') {
+         toast.error('Enter your login name & password', { position: 'top-center' });
+      } else if (auth.loginName === 'abc' && auth.loginPwd === '123') {
          window.open('http://127.0.0.1:5173/', '_self');
       } else {
-         alert('E');
+         toast.error('Login fail!', { position: 'top-center' });
       }
    };
 
    return (
-      <div className={cn('login')}>
-         <div className={cn('form')}>
+      <div className={cn('login-page')}>
+         <div className={cn('login-form')}>
             <h2>Đăng nhập</h2>
 
             <div className={cn('name-box')} style={{ width: '320px' }}>
@@ -89,12 +92,7 @@ function Login() {
             </FormControl>
 
             <div className={cn('confirm-btn')}>
-               <Button
-                  variant="contained"
-                  onClick={() => {
-                     handleAuth();
-                  }}
-               >
+               <Button variant="contained" onClick={handleAuth}>
                   Đăng nhập
                </Button>
             </div>

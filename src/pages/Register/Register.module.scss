@@ -1,4 +1,4 @@
-.login-page {
+.register-page {
    display: flex;
    flex-direction: column;
    justify-content: center;
@@ -6,10 +6,7 @@
    height: 100vh;
    background-color: var(--mainColor6);
 
-   & .login-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+   & .register-form {
       padding: 30px;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       border-radius: 5px;
@@ -20,7 +17,25 @@
          padding-bottom: 30px;
       }
 
-      & .confirm-btn {
+      & .form {
+         display: flex;
+         justify-content: space-between;
+         align-items: flex-start;
+
+         & .left-side {
+            padding-right: 10px;
+         }
+
+         & .right-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-left: 10px;
+         }
+      }
+
+      & .register-btn {
          display: flex;
          justify-content: flex-end;
          width: 100%;
