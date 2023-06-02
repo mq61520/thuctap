@@ -13,8 +13,33 @@ header {
       padding: 0 8px;
 
       & .logo {
-         font-size: 50px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
          color: var(--mainColor4);
+
+         & span {
+            color: #1c332b;
+            font-size: 30px;
+         }
+      }
+
+      & .search-history {
+         padding: 6px;
+         margin-bottom: 4px;
+
+         & .history-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+
+            & span {
+               font-size: 14px;
+               border: 1px solid #666;
+               border-radius: 50px;
+               padding: 0 4px;
+            }
+         }
       }
 
       & .search-box {
@@ -22,7 +47,7 @@ header {
          align-items: center;
          justify-content: flex-end;
          position: relative;
-         flex: 1;
+         // flex: 1;
          margin-right: 20px;
 
          input {
@@ -73,6 +98,12 @@ header {
             & .user-name {
                font-size: 18px;
                font-weight: 200;
+               color: var(--txtColor);
+
+               &:hover {
+                  cursor: pointer;
+                  color: #666;
+               }
             }
          }
       }

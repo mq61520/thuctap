@@ -1,0 +1,37 @@
+.item-search {
+   width: 400px;
+   padding: 6px;
+
+   & .item-box {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 4px;
+      border-radius: 5px;
+
+      &:hover {
+         cursor: pointer;
+         background-color: #eee;
+      }
+
+      & img {
+         width: 70px;
+         height: 70px;
+         object-fit: contain;
+      }
+
+      & h4 {
+         margin: 0 0 0 5px;
+         color: var(--txtColor);
+         font-size: 18px;
+         line-height: 20px;
+         font-weight: 400;
+         height: 60px;
+         display: block;
+         overflow: hidden;
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 3;
+      }
+   }
+}
