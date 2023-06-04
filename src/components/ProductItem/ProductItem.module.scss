@@ -1,0 +1,148 @@
+@keyframes product_animation {
+   from {
+      transform: translateY(100px);
+      opacity: 0;
+   }
+   to {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+
+@keyframes hover_animation {
+   from {
+      transform: translateY(0);
+   }
+   to {
+      transform: translateY(-1px);
+   }
+}
+
+.product-item {
+   width: 200px;
+   height: fit-content;
+   padding: 6px;
+   color: var(--txtColor);
+   border: 1px solid transparent;
+   border-radius: 5px;
+
+   &:hover {
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      border: 1px solid #eee;
+      //   animation: hover_animation 0.5s ease;
+   }
+
+   & .box {
+      position: relative;
+      //   border: 1px solid #000;
+
+      & .product-img {
+         overflow: hidden;
+
+         & img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            object-fit: contain;
+            border-radius: 5px;
+            animation: product_animation 0.5s ease;
+         }
+      }
+
+      & .product-name {
+         margin: 4px 0;
+         font-size: 18px;
+         font-weight: 400;
+         line-height: 20px;
+         height: 40px;
+         display: block;
+         overflow: hidden;
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 2;
+      }
+
+      & .product-price {
+         display: flex;
+         flex-direction: column;
+         margin: 8px 0 6px 0;
+
+         & h4 {
+            font-size: 18px;
+            line-height: 16px;
+         }
+
+         & .old-price {
+            font-size: 14px;
+            color: #777;
+            text-decoration: line-through;
+         }
+
+         & .current-price {
+            color: var(--mainColor4);
+         }
+      }
+
+      & .product-rating {
+         display: flex;
+         justify-content: flex-end;
+         align-items: center;
+
+         & span {
+            font-size: 16px;
+         }
+      }
+
+      & .product-episode {
+         position: absolute;
+         top: 238px;
+         right: 0;
+         font-size: 16px;
+         font-weight: 1000;
+         color: var(--mainColor4);
+         background-color: var(--mainColor6);
+         padding: 4px;
+         border-radius: 5px;
+      }
+
+      & .sale-flag {
+         width: 45px;
+         position: absolute;
+         top: -6px;
+         right: 0;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         background-color: var(--mainColor);
+         font-size: 14px;
+         line-height: 20px;
+         color: #fff;
+         padding: 0 2px;
+
+         &::before {
+            position: absolute;
+            top: 40px;
+            right: 22.5px;
+            content: '';
+            width: 0;
+            height: 0;
+            // border-top: 25px solid transparent;
+            border-left: 22.5px solid var(--mainColor);
+            border-bottom: 6px solid transparent;
+         }
+
+         &::after {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            content: '';
+            width: 0;
+            height: 0;
+            // border-top: 25px solid transparent;
+            border-right: 22.5px solid var(--mainColor);
+            border-bottom: 6px solid transparent;
+         }
+      }
+   }
+}

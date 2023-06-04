@@ -12,7 +12,7 @@ function SearchItem() {
             <div className={cn('item-box')}>
                <img
                   src="https://cdn0.fahasa.com/media/catalog/product/b/l/blue_block_bia_postcard_tap_7.jpg"
-                  alt="item-img"
+                  alt="Image"
                />
 
                <h4>BlueLock - Tập 7 - Tặng Kèm Card PVC</h4>

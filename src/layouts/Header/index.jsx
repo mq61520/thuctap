@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -28,6 +28,8 @@ function Header() {
    const [searchBox, setSearchBox] = useState(false);
 
    const user = true;
+
+   const buttonStyle = { fontSize: '18px', color: '#333' };
 
    return (
       <header>
@@ -71,6 +73,7 @@ function Header() {
             >
                <div className={cn('search-box')}>
                   <input
+                     placeholder="Nhập tên sách, tên tác giả,..."
                      onFocus={(e) => {
                         setSearchBox(!searchBox);
                      }}
@@ -110,9 +113,11 @@ function Header() {
                   <div className={cn('account')}>
                      <div className={cn('cart-btn')}>
                         <Link to={'/cart'}>
-                           <IconButton sx={{ padding: 1.2 }}>
-                              <AddShoppingCartIcon sx={{ fontSize: 40 }} />
+                           <IconButton sx={{ padding: 1 }}>
+                              <ShoppingBagOutlinedIcon sx={{ fontSize: 45, color: 'var(--mainColor4)' }} />
                            </IconButton>
+
+                           <span>1</span>
                         </Link>
                      </div>
 
@@ -130,11 +135,7 @@ function Header() {
                                              variant="text"
                                              sx={{ fontSize: 20, fontWeight: 400 }}
                                              startIcon={<GradingRoundedIcon />}
-                                             style={{
-                                                borderRadius: 50,
-                                                backgroundColor: '#21b6ae',
-                                                fontSize: '18px',
-                                             }}
+                                             style={buttonStyle}
                                           >
                                              Đơn mua
                                           </Button>
@@ -147,6 +148,7 @@ function Header() {
                                              variant="text"
                                              sx={{ fontSize: 20, fontWeight: 400 }}
                                              startIcon={<PermIdentityOutlinedIcon />}
+                                             style={buttonStyle}
                                           >
                                              Trang cá nhân
                                           </Button>
@@ -159,6 +161,7 @@ function Header() {
                                              variant="text"
                                              sx={{ fontSize: 20, fontWeight: 400 }}
                                              startIcon={<LogoutRoundedIcon />}
+                                             style={buttonStyle}
                                           >
                                              Đăng xuất
                                           </Button>
