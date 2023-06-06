@@ -10,11 +10,11 @@ const cn = classNames.bind(styles);
 function ProductItem() {
    return (
       <div className={cn('product-item')}>
-         <Link to={'/'}>
+         <Link to={'/login'}>
             <div className={cn('box')}>
                <div className={cn('product-img')}>
                   <img
-                     src="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_30282023_112849_1.jpg"
+                     src="https://cdn0.fahasa.com/media/catalog/product/k/a/kaguya-sama-cuoc-chien-to-tinh_bia_postcard_tap-17.jpg"
                      alt="Image"
                   />
                </div>
