@@ -10,7 +10,7 @@ const cn = classNames.bind(styles);
 function ProductItem() {
    return (
       <div className={cn('product-item')}>
-         <Link to={'/login'}>
+         <Link to={'/product-detail'}>
             <div className={cn('box')}>
                <div className={cn('product-img')}>
                   <img
