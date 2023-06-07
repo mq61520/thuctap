@@ -9,13 +9,28 @@
       flex-direction: column;
       align-items: center;
 
-      & .top-banner {
+      & .banners {
          width: 1291px;
          margin-top: 16px;
+
+         & .top-left-banner-img {
+            width: 100%;
+            height: 400px;
+
+            & img {
+               display: block;
+               margin-left: auto;
+               margin-right: auto;
+               width: 100%;
+               height: 100%;
+               object-fit: cover;
+               border-radius: 5px;
+            }
+         }
       }
 
       & .categories {
-         width: 1305px;
+         width: 1291px;
          display: flex;
          flex-direction: column;
          align-items: center;
@@ -42,7 +57,7 @@
       }
 
       & .hot-products {
-         width: 1305px;
+         width: 1291px;
          display: flex;
          flex-direction: column;
          align-items: center;

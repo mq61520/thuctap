@@ -5,7 +5,6 @@ import IconButton from '@mui/material/IconButton';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import CloseIcon from '@mui/icons-material/Close';
 import GradingRoundedIcon from '@mui/icons-material/GradingRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
