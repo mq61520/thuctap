@@ -2,7 +2,7 @@
    width: 100%;
    display: flex;
    justify-content: center;
-   background-color: #f0f0f0;
+   // background-color: #f0f0f0;
 
    & .inner {
       width: 85%;
@@ -138,6 +138,39 @@
                   margin-left: 10px;
                }
             }
+         }
+      }
+
+      & .product-description {
+         margin-top: 16px;
+         background-color: white;
+         padding: 12px;
+         border-radius: 8px;
+
+         & table {
+            margin-left: 20px;
+
+            & tr {
+               height: 30px;
+
+               & td {
+                  min-width: 200px;
+                  padding: 0 4px;
+               }
+            }
+         }
+
+         & h4 {
+            font-size: 26px;
+            font-weight: 500;
+            line-height: 50px;
+         }
+
+         & .name {
+            font-size: 20px;
+         }
+
+         & p {
          }
       }
    }
