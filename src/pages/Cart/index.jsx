@@ -12,12 +12,12 @@ import currencyFormater from '../../common/formatCurrency';
 const cn = classNames.bind(styles);
 
 function Cart() {
-   const [listProduct, setListProduct] = useState(true);
+   const [listProduct, setListProduct] = useState(false);
 
    return (
       <div className={cn('cart-page')}>
          <div className={cn('inner')}>
-            <h3>Giỏi hàng</h3>
+            <h3>Giỏ hàng</h3>
 
             {!listProduct ? (
                <>
@@ -49,7 +49,9 @@ function Cart() {
 
                   <div className={cn('btn-flex')}>
                      <div className={cn('pay-btn')}>
-                        <Button variant="contained">Tiến hành thanh toán</Button>
+                        <Link to={'/checkout'}>
+                           <Button variant="contained">Tiến hành thanh toán</Button>
+                        </Link>
                      </div>
                   </div>
                </>
@@ -59,9 +61,11 @@ function Cart() {
                      <h3 className={cn('message')}>Bạn chưa có sản phẩm nào trong giỏ hàng!</h3>
 
                      <div className={cn('go-shop')}>
-                        <Button variant="text" sx={{ fontSize: 20 }}>
-                           Tiến hành mua hàng
-                        </Button>
+                        <Link to={'/'}>
+                           <Button variant="text" sx={{ fontSize: 20 }}>
+                              Tiến hành mua hàng
+                           </Button>
+                        </Link>
                      </div>
                   </div>
                </>
