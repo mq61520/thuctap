@@ -3,15 +3,19 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 
 //mui
+import Modal from '@mui/material/Modal';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 
 import styles from './Payment.module.scss';
 import currencyFormater from '../../common/formatCurrency';
@@ -19,8 +23,30 @@ import currencyFormater from '../../common/formatCurrency';
 const cn = classNames.bind(styles);
 
 function Payment() {
+   //modal
+   const [openModal, setOpenModal] = useState(false);
+   const handleOpen = () => setOpenModal(true);
+   const handleClose = () => setOpenModal(false);
+   const styleModal = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 'fit-content',
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      boxShadow: 24,
+      padding: '20px',
+   };
+
+   //choose shipping unit
+   const [shipType, setShipType] = useState(50000);
+   const handleChange = (event) => {
+      setShipType(event.target.value);
+   };
+
    const [payMethod, setPayMethod] = useState('cod');
-   console.log(payMethod);
+
    return (
       <div className={cn('payment-page')}>
          <div className={cn('inner')}>
@@ -37,10 +63,46 @@ function Payment() {
                   <h3 className={cn('customer-address')}>Duong 3/2 phuong Xuan Khanh quan Ninh Kieu tp Can Tho</h3>
 
                   <div className={cn('change-address-btn')}>
-                     <IconButton sx={{ ml: 2, fontSize: 18, color: 'var(--mainColor4)' }}>
+                     <IconButton sx={{ ml: 2, fontSize: 18, color: 'var(--mainColor4)' }} onClick={handleOpen}>
                         <DriveFileRenameOutlineOutlinedIcon />
                      </IconButton>
                   </div>
+
+                  <Modal open={openModal} onClose={handleClose}>
+                     <div className={cn('change-address-modal-container')} style={styleModal}>
+                        <div
+                           className={cn('modal-header')}
+                           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
+                           <h4 style={{ fontSize: 24, fontWeight: 400, color: '#333' }}>
+                              Cập nhật <b>Địa chỉ</b> và <b>Số điện thoại</b>
+                           </h4>
+
+                           <IconButton
+                              onClick={() => {
+                                 setOpenModal(false);
+                              }}
+                           >
+                              <CloseIcon />
+                           </IconButton>
+                        </div>
+
+                        <div className={cn('modal-body')} style={{ marginTop: 26 }}>
+                           <TextField label="Số điện thoại" fullWidth margin="normal" size="large" />
+
+                           <TextField label="Địa chỉ" fullWidth multiline margin="normal" size="large" />
+                        </div>
+
+                        <div
+                           className={cn('modal-btns')}
+                           style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 26 }}
+                        >
+                           <Button variant="outlined" sx={{ color: 'var(--mainColor4)' }}>
+                              Thay đổi
+                           </Button>
+                        </div>
+                     </div>
+                  </Modal>
                </div>
             </div>
 
@@ -94,15 +156,14 @@ function Payment() {
                <div className={cn('shipping-unit')}>
                   <h4 style={{ flex: '1', color: '#333' }}>Hình thức vận chuyển</h4>
 
-                  <h4>Nhanh</h4>
-
-                  <div className={cn('shipping-unit-btn')}>
-                     <IconButton sx={{ margin: '0 50px 0 8px' }}>
-                        <ChangeCircleOutlinedIcon sx={{ color: 'var(--mainColor4)' }} />
-                     </IconButton>
-                  </div>
-
-                  <h4 className={cn('shipping-price')}>{currencyFormater.format(50000)}</h4>
+                  <Select value={shipType} onChange={handleChange} sx={{ width: 'fit-content', fontSize: 20 }}>
+                     <MenuItem value={50000} sx={{ fontSize: 20 }}>
+                        Nhanh - {currencyFormater.format(50000)}
+                     </MenuItem>
+                     <MenuItem value={70000} sx={{ fontSize: 20 }}>
+                        Hỏa tốc - {currencyFormater.format(70000)}
+                     </MenuItem>
+                  </Select>
                </div>
 
                <div className={cn('order-total')}>

@@ -162,16 +162,11 @@
             align-items: center;
             padding: 10px 10px;
             margin: 16px 0 0 0;
-            border-top: 1px solid #999;
+            border-top: 1px solid #7999;
 
             & h4 {
                font-size: 22px;
                color: var(--mainColor5);
-               font-weight: 400;
-            }
-
-            & .shipping-price {
-               font-size: 19px;
                font-weight: 400;
             }
          }

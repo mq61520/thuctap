@@ -110,9 +110,10 @@ header {
             }
 
             & .user-name {
-               font-size: 18px;
-               font-weight: 200;
-               color: var(--txtColor);
+               & h4 {
+                  font-size: 18px;
+                  font-weight: 400;
+               }
 
                &:hover {
                   cursor: pointer;
