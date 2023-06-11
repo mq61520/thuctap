@@ -17,6 +17,9 @@ import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRen
 import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
+//paypal api
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+
 import styles from './Payment.module.scss';
 import currencyFormater from '../../common/formatCurrency';
 
@@ -45,7 +48,13 @@ function Payment() {
       setShipType(event.target.value);
    };
 
-   const [payMethod, setPayMethod] = useState('cod');
+   //
+   const [payMethod, setPayMethod] = useState('COD');
+
+   //paypal options
+   const paypalOptions = {
+      'client-id': 'AYyRYx-U9NtmJnlgAdILj9GM9l9GPW9LYRmFoeJ4J9JITKkKq_18zyGjujIxIYpdXyAgEzg8urAL2v2D',
+   };
 
    return (
       <div className={cn('payment-page')}>
@@ -193,22 +202,57 @@ function Payment() {
             <div className={cn('payment-methods')}>
                <h4>Phương thức thanh toán</h4>
 
-               <RadioGroup
-                  row
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={payMethod}
-                  onChange={(e) => {
-                     setPayMethod(e.target.value);
-                  }}
-               >
-                  <FormControlLabel
-                     value="COD"
-                     control={<Radio checked />}
-                     label="COD (Thanh toán trực tiếp khi nhận hàng)"
-                  />
-                  <FormControlLabel value="Paypal" control={<Radio />} label="Paypal" />
-               </RadioGroup>
+               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <RadioGroup
+                     defaultValue="COD"
+                     row
+                     aria-labelledby="demo-controlled-radio-buttons-group"
+                     name="controlled-radio-buttons-group"
+                     value={payMethod}
+                     onChange={(e) => {
+                        setPayMethod(e.target.value);
+                     }}
+                  >
+                     <FormControlLabel
+                        value="COD"
+                        control={<Radio />}
+                        label="COD (Thanh toán trực tiếp khi nhận hàng)"
+                     />
+                     <FormControlLabel value="Paypal" control={<Radio />} label="Paypal" />
+                  </RadioGroup>
+
+                  {payMethod === 'Paypal' ? (
+                     <div className={cn('paypal-api')}>
+                        <PayPalScriptProvider options={paypalOptions}>
+                           <PayPalButtons
+                              createOrder={(data, actions) => {
+                                 var pay_total = (total + ship.gia) * 0.000043;
+
+                                 return actions.order.create({
+                                    purchase_units: [
+                                       {
+                                          amount: {
+                                             value: pay_total.toFixed(2),
+                                          },
+                                       },
+                                    ],
+                                 });
+                              }}
+                              onApprove={(data, actions) => {
+                                 return actions.order.capture().then((details) => {
+                                    // setPayment({ ...payment, status: 'Paid' });
+                                    // toast.success('Thanh toán thành công! Bạn đã có thể đặt hàng.', {
+                                    //    position: 'top-center',
+                                    // });
+                                 });
+                              }}
+                           />
+                        </PayPalScriptProvider>
+                     </div>
+                  ) : (
+                     <></>
+                  )}
+               </div>
             </div>
 
             <div className={cn('total')}>

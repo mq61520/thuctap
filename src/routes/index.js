@@ -1,3 +1,7 @@
+//layouts
+import AdminLayout from '../layouts/AdminLayout';
+
+//pages
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Home from '../pages/Home';
@@ -5,6 +9,7 @@ import DetailProduct from '../pages/DetailProduct';
 import Cart from '../pages/Cart';
 import Payment from '../pages/Payment';
 import Search from '../pages/Search';
+import ProductsManager from '../pages/ProductsManager';
 
 export const allPages = [
    { path: '/', component: Home },
@@ -14,4 +19,5 @@ export const allPages = [
    { path: '/product-detail', component: DetailProduct },
    { path: '/cart', component: Cart },
    { path: '/checkout', component: Payment },
+   { path: '/admin/products', component: ProductsManager, layout: AdminLayout },
 ];
