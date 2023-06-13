@@ -10,6 +10,7 @@ import Cart from '../pages/Cart';
 import Payment from '../pages/Payment';
 import Search from '../pages/Search';
 import ProductsManager from '../pages/ProductsManager';
+import OrderManager from '../pages/OrderManager';
 
 export const allPages = [
    { path: '/', component: Home },
@@ -20,4 +21,5 @@ export const allPages = [
    { path: '/cart', component: Cart },
    { path: '/checkout', component: Payment },
    { path: '/admin/products', component: ProductsManager, layout: AdminLayout },
+   { path: '/admin/orders', component: OrderManager, layout: AdminLayout },
 ];

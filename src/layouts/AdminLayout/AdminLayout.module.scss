@@ -1,3 +1,56 @@
 .page {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
    background-color: #f0f0f0;
+
+   & .header {
+      width: 85%;
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      background-color: var(--mainColor6);
+
+      & .header-logo {
+         font-size: 26px;
+         font-family: 'Pacifico', cursive;
+         color: var(--mainColor4);
+
+         &:hover {
+            cursor: pointer;
+         }
+      }
+
+      & .header-actions {
+         & .account {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+            & img {
+               width: 60px;
+            }
+
+            & h4 {
+               font-size: 19px;
+               font-weight: 400;
+            }
+
+            &:hover {
+               cursor: pointer;
+            }
+         }
+      }
+   }
+
+   & .children {
+      width: 85%;
+      display: flex;
+      justify-content: center;
+   }
 }

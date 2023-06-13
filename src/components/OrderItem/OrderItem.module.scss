@@ -1,0 +1,157 @@
+.wrapper {
+   width: 100%;
+   border-radius: 8px;
+   margin-top: 10px;
+   background-color: white;
+   padding: 4px 0;
+
+   & .order {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+
+      & h4 {
+         font-size: 19px;
+         font-weight: 400;
+         text-align: center;
+      }
+
+      & .time-order {
+         width: 170px;
+      }
+
+      & .order-code {
+         width: 200px;
+      }
+
+      & .customer-name {
+         width: 210px;
+      }
+
+      & .amount {
+         width: 120px;
+      }
+
+      & .price {
+         width: 110px;
+         color: var(--mainColor4);
+      }
+
+      & .check {
+         width: 90px;
+      }
+
+      & .change-order-status {
+         width: 180px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+
+         & .select-status {
+            height: 30px;
+            font-size: 19px;
+         }
+      }
+   }
+
+   & .products-list {
+      border-top: 1px solid #999;
+      border-bottom: 1px solid #999;
+      margin: 15px 200px;
+      background-color: #fefefe;
+
+      & .products-list-header {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         border-bottom: 1px solid #999;
+         padding: 5px 0;
+
+         & h4 {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+         }
+
+         & .product-number {
+            width: 50px;
+         }
+
+         & .product-name {
+            width: 385px;
+         }
+
+         & .product-amount {
+            width: 100px;
+         }
+
+         & .product-price {
+            width: 120px;
+         }
+      }
+
+      & .product {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         border-bottom: 1px solid #777;
+         padding: 5px 0;
+
+         &:last-child {
+            border-bottom: 1px solid transparent;
+         }
+
+         & h4 {
+            font-size: 16px;
+            font-weight: 400;
+            text-align: center;
+         }
+
+         & .product-number {
+            width: 50px;
+         }
+
+         & .product-img {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            & img {
+               width: 80px;
+               margin-right: 10px;
+            }
+
+            & .product-name {
+               overflow: hidden;
+               white-space: nowrap;
+               text-overflow: ellipsis;
+               width: 300px;
+               text-align: left;
+            }
+         }
+
+         & .product-amount {
+            width: 100px;
+         }
+
+         & .product-price {
+            width: 120px;
+            color: var(--mainColor4);
+         }
+      }
+   }
+
+   & .order-actions {
+      display: flex;
+      justify-content: center;
+
+      & .detail-btn {
+         width: fit-content;
+      }
+
+      & .detail-btn-icon {
+         font-size: 2.4rem;
+      }
+   }
+}
