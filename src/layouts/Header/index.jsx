@@ -129,7 +129,7 @@ function Header() {
                               <Popper>
                                  <div className={cn('account-function-btns')}>
                                     <div className={cn('order-btn')}>
-                                       <Link to={'/login'}>
+                                       <Link to={'/orders'}>
                                           <Button
                                              variant="text"
                                              sx={{ fontSize: 20, fontWeight: 400 }}
@@ -141,7 +141,7 @@ function Header() {
                                        </Link>
                                     </div>
 
-                                    <div className={cn('profile-btn')}>
+                                    {/* <div className={cn('profile-btn')}>
                                        <Link to={'/login'}>
                                           <Button
                                              variant="text"
@@ -152,7 +152,7 @@ function Header() {
                                              Trang cá nhân
                                           </Button>
                                        </Link>
-                                    </div>
+                                    </div> */}
 
                                     <div className={cn('logout-btn')}>
                                        <Link to={'/login'}>

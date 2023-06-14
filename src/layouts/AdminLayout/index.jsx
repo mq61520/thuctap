@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 
 import Button from '@mui/material/Button';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
 import Tippy from '@tippyjs/react/headless';
@@ -8,15 +11,45 @@ import 'tippy.js/dist/tippy.css';
 
 import styles from './AdminLayout.module.scss';
 import Popper from '../../components/Popper';
+import { Link } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
 function AdminLayout({ children }) {
+   const [alignment, setAlignment] = useState('QLDH');
+   const handleChange = (event, newAlignment) => {
+      setAlignment(newAlignment);
+   };
+
    return (
       <div className={cn('page')}>
          <div className={cn('header')}>
-            <div className={cn('header-logo')}>
-               <h1>BOOKstore</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+               <div className={cn('header-logo')}>
+                  <h1>BOOKstore</h1>
+               </div>
+
+               <div className={cn('choose-manager')} style={{ marginLeft: 20 }}>
+                  <ToggleButtonGroup
+                     color="primary"
+                     value={alignment}
+                     exclusive
+                     onChange={handleChange}
+                     aria-label="Platform"
+                  >
+                     <ToggleButton value="QLDH" style={{ padding: 0 }}>
+                        <Link to={'/admin/orders'}>
+                           <div className={cn('choose-btn')}>Quản lý đơn hàng</div>
+                        </Link>
+                     </ToggleButton>
+
+                     <ToggleButton value="QLHH" style={{ padding: 0 }}>
+                        <Link to={'/admin/products'}>
+                           <div className={cn('choose-btn')}>Quản lý hàng hóa</div>
+                        </Link>
+                     </ToggleButton>
+                  </ToggleButtonGroup>
+               </div>
             </div>
 
             <div className={cn('header-actions')}>

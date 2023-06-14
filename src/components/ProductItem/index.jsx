@@ -14,6 +14,7 @@ function ProductItem() {
             <div className={cn('box')}>
                <div className={cn('product-img')}>
                   <img
+                     className={cn('image')}
                      src="https://cdn0.fahasa.com/media/catalog/product/k/a/kaguya-sama-cuoc-chien-to-tinh_bia_postcard_tap-17.jpg"
                      alt="Image"
                   />
