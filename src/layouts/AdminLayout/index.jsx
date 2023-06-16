@@ -9,6 +9,8 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import Tippy from '@tippyjs/react/headless';
 import 'tippy.js/dist/tippy.css';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import styles from './AdminLayout.module.scss';
 import Popper from '../../components/Popper';
 import { Link } from 'react-router-dom';
@@ -20,6 +22,8 @@ function AdminLayout({ children }) {
    const handleChange = (event, newAlignment) => {
       setAlignment(newAlignment);
    };
+
+   const auth = useSelector((state) => state.auth);
 
    return (
       <div className={cn('page')}>
@@ -62,6 +66,10 @@ function AdminLayout({ children }) {
                               variant="contained"
                               startIcon={<LogoutOutlinedIcon />}
                               sx={{ backgroundColor: 'var(--mainColor4)' }}
+                              onClick={() => {
+                                 localStorage.setItem('admin_name', '');
+                                 window.open('http://127.0.0.1:5173/login', '_self');
+                              }}
                            >
                               Đăng xuất
                            </Button>
@@ -70,7 +78,7 @@ function AdminLayout({ children }) {
                   )}
                >
                   <div className={cn('account')}>
-                     <h4>Nguyễn Minh Quân</h4>
+                     <h4>{localStorage.getItem('admin_name')}</h4>
 
                      {/* <img src={'http://localhost:4000/' + localStorage.getItem('avatar_name')} alt="Admin avatar" /> */}
                   </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import classNames from 'classnames/bind';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -35,13 +36,35 @@ function Login() {
 
    console.log(auth);
 
-   const handleAuth = () => {
-      if (auth.loginName === '' || auth.loginPwd === '') {
-         toast.error('Enter your login name & password', { position: 'top-center' });
-      } else if (auth.loginName === 'abc' && auth.loginPwd === '123') {
-         window.open('http://127.0.0.1:5173/', '_self');
-      } else {
-         toast.error('Login fail!', { position: 'top-center' });
+   const clearTextInput = () => {
+      const action1 = changeLoginName('');
+      const action2 = changeLoginPwd('');
+      dispatch(action1);
+      dispatch(action2);
+   };
+
+   const handleAuth = async () => {
+      try {
+         const response = await axios.post(`http://localhost:4000/account/authentication`, {
+            loginname: auth.loginName,
+            loginpwd: auth.loginPwd,
+         });
+
+         if (response.data[0].exist === 1) {
+            if (response.data[0].nd_role === 1) {
+               localStorage.setItem('admin_name', response.data[0].nd_hoten);
+               window.open('http://127.0.0.1:5173/admin/products', '_self');
+            } else {
+               localStorage.setItem('user_name', response.data[0].nd_hoten);
+               localStorage.setItem('user_id', response.data[0].nd_id);
+               window.open('http://127.0.0.1:5173/', '_self');
+            }
+         } else {
+            toast.error('Tên đăng nhập hoặc mật khẩu sai.', { position: 'top-center' });
+            clearTextInput();
+         }
+      } catch (err) {
+         console.log(err);
       }
    };
 

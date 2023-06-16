@@ -26,7 +26,7 @@ function Header() {
 
    const [searchBox, setSearchBox] = useState(false);
 
-   const user = true;
+   const user = localStorage.getItem('user_name');
 
    const buttonStyle = { fontSize: '18px', color: '#333' };
 
@@ -90,7 +90,7 @@ function Header() {
             </Tippy>
 
             <div className={cn('right-features')}>
-               {!user ? (
+               {user.length <= 0 ? (
                   <div className={cn('actions')}>
                      <div className={cn('register-btn')}>
                         <Link to={'/register'}>
@@ -161,6 +161,10 @@ function Header() {
                                              sx={{ fontSize: 20, fontWeight: 400 }}
                                              startIcon={<LogoutRoundedIcon />}
                                              style={buttonStyle}
+                                             onClick={() => {
+                                                localStorage.setItem('user_name', '');
+                                                window.open('http://127.0.0.1:5173/', '_self');
+                                             }}
                                           >
                                              Đăng xuất
                                           </Button>
@@ -172,7 +176,7 @@ function Header() {
                         )}
                      >
                         <div className={cn('user-name')}>
-                           <h4>Nguyễn Minh Quân</h4>
+                           <h4>{localStorage.getItem('user_name')}</h4>
                         </div>
                      </Tippy>
                   </div>

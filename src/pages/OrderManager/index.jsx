@@ -3,12 +3,18 @@ import axios from 'axios';
 import classNames from 'classnames/bind';
 import { toast } from 'react-toastify';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import styles from './OrderManager.module.scss';
 import OrderItem from '../../components/OrderItem';
 
 const cn = classNames.bind(styles);
 
 function OrderManager() {
+   const auth = useSelector((state) => state.auth);
+
+   console.log(auth);
+
    return (
       <div className={cn('body')}>
          <h4 className={cn('content-title')}>Quản lý đơn hàng</h4>
