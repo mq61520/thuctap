@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import classNames from 'classnames/bind';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -32,15 +33,41 @@ function Register() {
    const [loginPwd, setLoginPwd] = useState('');
    const [confirmPwd, setConfirmPwd] = useState('');
 
-   const handleRegister = () => {
-      if (loginName === 'abc') {
-         toast.error('Tên đăng nhập đã tồn tại', { position: 'top-center' });
+   const clearTextInput = () => {
+      setUserName('');
+      setPhone('');
+      setAddress('');
+      setLoginName('');
+      setLoginPwd('');
+      setConfirmPwd('');
+   };
+
+   const handleRegister = async () => {
+      if (userName.length <= 0 || loginName.length <= 0) {
+         toast.error('Nhập đầy đủ vào các trường.', { position: 'top-center' });
       } else if (loginPwd.length <= 8) {
          toast.error('Mật khẩu phải dài hơn 8 ký tự', { position: 'top-center' });
       } else if (confirmPwd !== loginPwd) {
          toast.error('Xác nhận lại mật khẩu', { position: 'top-center' });
       } else {
-         toast.success('Đăng ký thành công', { position: 'top-center' });
+         try {
+            const response = await axios.post(`http://localhost:4000/account/register`, {
+               username: userName,
+               phone: phone,
+               addr: address,
+               loginname: loginName,
+               loginpwd: loginPwd,
+            });
+
+            if (response.data === 'UsernameAvailable') {
+               toast.error('Tên đăng nhập đã trùng. Vui lòng chọn tên khác.', { position: 'top-center' });
+            } else if (response.data === 'AddSuccess') {
+               toast.success('Đăng ký thành công.', { position: 'top-center' });
+               clearTextInput();
+            }
+         } catch (err) {
+            console.log(err);
+         }
       }
    };
 
