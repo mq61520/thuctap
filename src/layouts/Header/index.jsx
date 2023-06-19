@@ -163,7 +163,7 @@ function Header() {
                                              style={buttonStyle}
                                              onClick={() => {
                                                 localStorage.setItem('user_name', '');
-                                                window.open('http://127.0.0.1:5173/', '_self');
+                                                window.open('http://127.0.0.1:5173', '_self');
                                              }}
                                           >
                                              Đăng xuất

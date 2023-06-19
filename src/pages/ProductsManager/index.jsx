@@ -41,9 +41,66 @@ function ProductsManager() {
       padding: '20px',
    };
 
+   const [listProd, setListProd] = useState([1]);
+
+   const [prodCode, setProdCode] = useState();
+   const [prodName, setProdName] = useState();
+   const [prodAmount, setProdAmount] = useState();
+   const [prodPrice, setProdPrice] = useState();
+   const [prodDesc, setProdDesc] = useState();
    const [imgSp, setImgSp] = useState([]);
 
-   const [listProd, setListProd] = useState(['aa']);
+   const handleAddProduct = async () => {
+      try {
+         const add_product_res = await axios.post('http://localhost:4000/product/add', {
+            ma_sp: prodCode,
+            anh_sp: imgSp[0].name,
+            ten: prodName,
+            sl: prodAmount,
+            gia: prodPrice,
+            mota: prodDesc,
+         });
+         // console.log(add_product_res);
+
+         var add_images_res;
+         for (let i = 0; i < imgSp.length; i++) {
+            const postData = new FormData();
+            postData.append('product_images', imgSp[i]);
+            postData.append('ma_sp', prodCode);
+
+            add_images_res = await axios({
+               method: 'POST',
+               url: 'http://localhost:4000/product/product_images',
+               data: postData,
+               headers: {
+                  'Content-Type': 'multipart/form-data',
+               },
+            });
+         }
+
+         console.log('product response:' + add_product_res.data);
+         console.log('image response:' + add_images_res.data);
+
+         if (add_product_res.data === 'ExistProductCode') {
+            toast.success('Đã tồn tại mã sản phẩm này.', { position: 'top-center' });
+         } else if (add_product_res.data === 'AddProductSuccess' && add_images_res.data === 'AddImgSuccess') {
+            console.log('Thêm sản phẩm thành công');
+            toast.success('Thêm sản phẩm thành công.', { position: 'top-center' });
+
+            setMaSp('');
+            setTenSp('');
+            setSlSp('');
+            setGiaSp('');
+            setMotaSp('');
+            setImgSp([]);
+         } else {
+            console.log('Thêm sản phẩm không thành công');
+            toast.error('Thêm sản phẩm không thành công.', { position: 'top-center' });
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
 
    return (
       <div className={cn('body')}>
@@ -82,10 +139,46 @@ function ProductsManager() {
                         style={{ display: 'flex', justifyContent: 'space-between', marginTop: 26 }}
                      >
                         <div className={cn('left-side')} style={{ width: '500px' }}>
-                           <TextField label="Mã sản phẩm" fullWidth size="large" margin="normal" />
-                           <TextField label="Tên sản phẩm" fullWidth multiline size="large" margin="normal" />
-                           <TextField label="Số lượng" type="number" fullWidth multiline size="large" margin="normal" />
-                           <TextField label="Giá" fullWidth multiline size="large" margin="normal" />
+                           <TextField
+                              label="Mã sản phẩm"
+                              fullWidth
+                              size="large"
+                              margin="normal"
+                              onChange={(e) => {
+                                 setProdCode(e.target.value);
+                              }}
+                           />
+                           <TextField
+                              label="Tên sản phẩm"
+                              fullWidth
+                              multiline
+                              size="large"
+                              margin="normal"
+                              onChange={(e) => {
+                                 setProdName(e.target.value);
+                              }}
+                           />
+                           <TextField
+                              label="Số lượng"
+                              type="number"
+                              fullWidth
+                              multiline
+                              size="large"
+                              margin="normal"
+                              onChange={(e) => {
+                                 setProdAmount(e.target.value);
+                              }}
+                           />
+                           <TextField
+                              label="Giá"
+                              fullWidth
+                              multiline
+                              size="large"
+                              margin="normal"
+                              onChange={(e) => {
+                                 setProdPrice(e.target.value);
+                              }}
+                           />
                         </div>
                         <div className={cn('right-side')} style={{ width: '500px' }}>
                            <TextField
@@ -95,6 +188,9 @@ function ProductsManager() {
                               rows={5}
                               size="large"
                               margin="normal"
+                              onChange={(e) => {
+                                 setProdDesc(e.target.value);
+                              }}
                            />
 
                            <div className={cn('input-label')} style={{ marginRTop: '16px' }}>
@@ -150,7 +246,11 @@ function ProductsManager() {
                            Đóng
                         </Button>
 
-                        <Button variant="contained" sx={{ width: '120px', backgroundColor: 'var(--mainColor4)' }}>
+                        <Button
+                           variant="contained"
+                           sx={{ width: '120px', backgroundColor: 'var(--mainColor4)' }}
+                           onClick={handleAddProduct}
+                        >
                            Thêm
                         </Button>
                      </div>
@@ -174,28 +274,6 @@ function ProductsManager() {
             <div className={cn('table-body')}>
                {listProd.length > 0 ? (
                   <>
-                     <div className={cn('table-row')}>
-                        <h4 className={cn('product-number')}>001</h4>
-                        <h4 className={cn('product-code')}>spsjkvs</h4>
-                        <h4 className={cn('product-name')}>ksdk sdivbisd sudivgisdv idgvisdbv</h4>
-                        <h4 className={cn('product-price')}>{currencyFormater.format(1654652)}</h4>
-                        <h4 className={cn('product-instock')}>9999</h4>
-                        <h4 className={cn('product-promotion')}>
-                           <IconButton>
-                              <SellOutlinedIcon />
-                           </IconButton>
-                        </h4>
-                        <h4 className={cn('product-del')}>
-                           <IconButton>
-                              <DeleteOutlineOutlinedIcon />
-                           </IconButton>
-                        </h4>
-                        <h4 className={cn('product-tool')}>
-                           <IconButton>
-                              <VisibilityOffOutlinedIcon />
-                           </IconButton>
-                        </h4>
-                     </div>
                      <div className={cn('table-row')}>
                         <h4 className={cn('product-number')}>001</h4>
                         <h4 className={cn('product-code')}>spsjkvs</h4>
