@@ -41,13 +41,13 @@ function ProductsManager() {
       padding: '20px',
    };
 
-   const [listProd, setListProd] = useState([1]);
+   const [listProd, setListProd] = useState([]);
 
-   const [prodCode, setProdCode] = useState();
-   const [prodName, setProdName] = useState();
-   const [prodAmount, setProdAmount] = useState();
-   const [prodPrice, setProdPrice] = useState();
-   const [prodDesc, setProdDesc] = useState();
+   const [prodCode, setProdCode] = useState('');
+   const [prodName, setProdName] = useState('');
+   const [prodAmount, setProdAmount] = useState('');
+   const [prodPrice, setProdPrice] = useState('');
+   const [prodDesc, setProdDesc] = useState('');
    const [imgSp, setImgSp] = useState([]);
 
    const handleAddProduct = async () => {
@@ -82,17 +82,19 @@ function ProductsManager() {
          console.log('image response:' + add_images_res.data);
 
          if (add_product_res.data === 'ExistProductCode') {
-            toast.success('Đã tồn tại mã sản phẩm này.', { position: 'top-center' });
+            toast.warn('Đã tồn tại mã sản phẩm này. Hãy chọn mã khác.', { position: 'top-center' });
          } else if (add_product_res.data === 'AddProductSuccess' && add_images_res.data === 'AddImgSuccess') {
             console.log('Thêm sản phẩm thành công');
             toast.success('Thêm sản phẩm thành công.', { position: 'top-center' });
 
-            setMaSp('');
-            setTenSp('');
-            setSlSp('');
-            setGiaSp('');
-            setMotaSp('');
+            setProdCode('');
+            setProdName('');
+            setProdAmount('');
+            setProdPrice('');
+            setProdDesc('');
             setImgSp([]);
+
+            handleGetProductList();
          } else {
             console.log('Thêm sản phẩm không thành công');
             toast.error('Thêm sản phẩm không thành công.', { position: 'top-center' });
@@ -101,6 +103,66 @@ function ProductsManager() {
          console.log(error);
       }
    };
+
+   const handleGetProductList = async () => {
+      try {
+         const product_list = await axios.get('http://localhost:4000/product/all');
+
+         if (product_list.data.length > 0) {
+            setListProd(product_list.data);
+            console.log(product_list.data);
+         } else {
+            console.log('Tải sản phẩm thất bại.');
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   const hanldeRemoveProduct = async (ma_sp) => {
+      try {
+         const delete_product = await axios.get('http://localhost:4000/product/delete/' + ma_sp);
+
+         if (delete_product.data === 'DeleteProductSuccess') {
+            toast.success(`Xóa sản phẩm ${ma_sp} thành công.`, { position: 'top-center' });
+            handleGetProductList();
+         } else {
+            toast.error(`Xóa sản phẩm ${ma_sp} không thành công.`, { position: 'top-center' });
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   const handleUpdateStatus = async (ma_sp, status) => {
+      try {
+         var new_status;
+
+         if (status == 1) {
+            new_status = 0;
+         } else {
+            new_status = 1;
+         }
+
+         const update_product = await axios.post('http://localhost:4000/product/status', {
+            ma_sp: ma_sp,
+            status: new_status,
+         });
+
+         if (update_product.data === 'UpdateProductSuccess') {
+            handleGetProductList();
+         } else {
+            // toast.error(`Lỗi.`, { position: 'top-center' });
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   var stt = 0;
+   useEffect(() => {
+      handleGetProductList();
+   }, []);
 
    return (
       <div className={cn('body')}>
@@ -144,6 +206,7 @@ function ProductsManager() {
                               fullWidth
                               size="large"
                               margin="normal"
+                              value={prodCode}
                               onChange={(e) => {
                                  setProdCode(e.target.value);
                               }}
@@ -154,6 +217,7 @@ function ProductsManager() {
                               multiline
                               size="large"
                               margin="normal"
+                              value={prodName}
                               onChange={(e) => {
                                  setProdName(e.target.value);
                               }}
@@ -165,6 +229,7 @@ function ProductsManager() {
                               multiline
                               size="large"
                               margin="normal"
+                              value={prodAmount}
                               onChange={(e) => {
                                  setProdAmount(e.target.value);
                               }}
@@ -175,6 +240,7 @@ function ProductsManager() {
                               multiline
                               size="large"
                               margin="normal"
+                              value={prodPrice}
                               onChange={(e) => {
                                  setProdPrice(e.target.value);
                               }}
@@ -188,6 +254,7 @@ function ProductsManager() {
                               rows={5}
                               size="large"
                               margin="normal"
+                              value={prodDesc}
                               onChange={(e) => {
                                  setProdDesc(e.target.value);
                               }}
@@ -273,30 +340,44 @@ function ProductsManager() {
 
             <div className={cn('table-body')}>
                {listProd.length > 0 ? (
-                  <>
-                     <div className={cn('table-row')}>
-                        <h4 className={cn('product-number')}>001</h4>
-                        <h4 className={cn('product-code')}>spsjkvs</h4>
-                        <h4 className={cn('product-name')}>ksdk sdivbisd sudivgisdv idgvisdbv</h4>
-                        <h4 className={cn('product-price')}>{currencyFormater.format(1654652)}</h4>
-                        <h4 className={cn('product-instock')}>9999</h4>
-                        <h4 className={cn('product-promotion')}>
-                           <IconButton>
-                              <SellOutlinedIcon />
-                           </IconButton>
-                        </h4>
-                        <h4 className={cn('product-del')}>
-                           <IconButton>
-                              <DeleteOutlineOutlinedIcon />
-                           </IconButton>
-                        </h4>
-                        <h4 className={cn('product-tool')}>
-                           <IconButton>
-                              <VisibilityOffOutlinedIcon />
-                           </IconButton>
-                        </h4>
-                     </div>
-                  </>
+                  listProd.map((product) => {
+                     stt++;
+                     return (
+                        <div className={cn('table-row')} key={product.sp_id}>
+                           <h4 className={cn('product-number')}>{stt}</h4>
+                           <h4 className={cn('product-code')}>{product.sp_ma}</h4>
+                           <div className={cn('product-info')}>
+                              <img src={'http://localhost:4000/' + product.sp_image} alt="Ảnh sản phẩm" />
+                              <h4 className={cn('product-name')}>{product.sp_ten}</h4>
+                           </div>
+                           <h4 className={cn('product-price')}>{currencyFormater.format(product.sp_gia)}</h4>
+                           <h4 className={cn('product-instock')}>{product.sp_tonkho}</h4>
+                           <h4 className={cn('product-promotion')}>
+                              <IconButton>
+                                 <SellOutlinedIcon />
+                              </IconButton>
+                           </h4>
+                           <h4 className={cn('product-del')}>
+                              <IconButton onClick={() => hanldeRemoveProduct(product.sp_ma)}>
+                                 <DeleteOutlineOutlinedIcon />
+                              </IconButton>
+                           </h4>
+                           <h4 className={cn('product-tool')}>
+                              <IconButton
+                                 onClick={() => {
+                                    handleUpdateStatus(product.sp_ma, product.sp_trangthai);
+                                 }}
+                              >
+                                 {product.sp_trangthai == 0 ? (
+                                    <VisibilityOffOutlinedIcon />
+                                 ) : (
+                                    <VisibilityOutlinedIcon />
+                                 )}
+                              </IconButton>
+                           </h4>
+                        </div>
+                     );
+                  })
                ) : (
                   <h1 className={cn('no-product')}>Không có sản phẩm</h1>
                )}

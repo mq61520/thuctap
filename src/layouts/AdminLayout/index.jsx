@@ -18,7 +18,8 @@ import { Link } from 'react-router-dom';
 const cn = classNames.bind(styles);
 
 function AdminLayout({ children }) {
-   const [alignment, setAlignment] = useState('QLDH');
+   var toggle = window.location.pathname.slice(7).toString();
+   const [alignment, setAlignment] = useState(toggle);
    const handleChange = (event, newAlignment) => {
       setAlignment(newAlignment);
    };
@@ -41,13 +42,13 @@ function AdminLayout({ children }) {
                      onChange={handleChange}
                      aria-label="Platform"
                   >
-                     <ToggleButton value="QLDH" style={{ padding: 0 }}>
+                     <ToggleButton value="orders" style={{ padding: 0 }}>
                         <Link to={'/admin/orders'}>
                            <div className={cn('choose-btn')}>Quản lý đơn hàng</div>
                         </Link>
                      </ToggleButton>
 
-                     <ToggleButton value="QLHH" style={{ padding: 0 }}>
+                     <ToggleButton value="products" style={{ padding: 0 }}>
                         <Link to={'/admin/products'}>
                            <div className={cn('choose-btn')}>Quản lý hàng hóa</div>
                         </Link>

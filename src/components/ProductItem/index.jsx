@@ -7,38 +7,38 @@ import currencyFormater from '../../common/formatCurrency';
 
 const cn = classNames.bind(styles);
 
-function ProductItem() {
+function ProductItem({ ma_sp, img, ten, gia, sale, ep }) {
    return (
       <div className={cn('product-item')}>
-         <Link to={'/product-detail'}>
+         <Link to={'/product-detail/' + ma_sp}>
             <div className={cn('box')}>
                <div className={cn('product-img')}>
-                  <img
-                     className={cn('image')}
-                     src="https://cdn0.fahasa.com/media/catalog/product/k/a/kaguya-sama-cuoc-chien-to-tinh_bia_postcard_tap-17.jpg"
-                     alt="Image"
-                  />
+                  <img className={cn('image')} src={'http://localhost:4000/' + img} alt="Image" />
                </div>
 
-               <h4 className={cn('product-name')}>BlueLock - Tập 7 - Tặng kèm PVC Card</h4>
+               <h4 className={cn('product-name')}>{ten}</h4>
 
                <div className={cn('product-price')}>
-                  <h4 className={cn('current-price')}>{currencyFormater.format(6500000)}</h4>
-                  <h4 className={cn('old-price')}>{currencyFormater.format(6500000)}</h4>
+                  <h4 className={cn('current-price')}>{currencyFormater.format(gia)}</h4>
+                  {sale > 0 ? <h4 className={cn('old-price')}>{currencyFormater.format(gia)}</h4> : <></>}
                </div>
 
-               <div className={cn('product-rating')}>
+               {/* <div className={cn('product-rating')}>
                   <Rating name="read-only" sx={{ fontSize: 20 }} value={3} readOnly />
 
                   <span>(100)</span>
-               </div>
+               </div> */}
 
-               <span className={cn('product-episode')}>Tập 100</span>
+               {/* <span className={cn('product-episode')}>Tập 100</span> */}
 
-               <h4 className={cn('sale-flag')}>
-                  <span>100%</span>
-                  <span>giảm</span>
-               </h4>
+               {sale > 0 ? (
+                  <h4 className={cn('sale-flag')}>
+                     <span>100%</span>
+                     <span>giảm</span>
+                  </h4>
+               ) : (
+                  <></>
+               )}
             </div>
          </Link>
       </div>

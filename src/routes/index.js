@@ -18,7 +18,7 @@ export const allPages = [
    { path: '/search', component: Search },
    { path: '/login', component: Login, layout: null },
    { path: '/register', component: Register, layout: null },
-   { path: '/product-detail', component: DetailProduct },
+   { path: '/product-detail/:ma_sp', component: DetailProduct },
    { path: '/cart', component: Cart },
    { path: '/checkout', component: Payment },
    { path: '/orders', component: Orders },
