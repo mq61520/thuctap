@@ -25,7 +25,7 @@ import currencyFormater from '../../common/formatCurrency';
 const cn = classNames.bind(styles);
 
 function DetailProduct() {
-   window.scrollTo(0, 0);
+   const is_logged = localStorage.getItem('is_logged');
 
    const [amount, setAmount] = useState(0);
    const [showMoreDesc, setShowMoreDesc] = useState(false);
@@ -73,7 +73,21 @@ function DetailProduct() {
       }
    };
 
+   const handleAddToCart = async () => {
+      if (is_logged === '0') {
+         toast.warn('Đăng nhập để thêm sản phẩm vào giỏ hàng.', { position: 'top-center' });
+      } else {
+         try {
+            toast.success('Them thanh cong.', { position: 'top-center' });
+         } catch (error) {
+            console.log(error);
+         }
+      }
+   };
+
    useEffect(() => {
+      window.scrollTo(0, 0);
+
       var ma_sp = window.location.pathname.slice(16).toString();
       handleGetProductInfo(ma_sp);
       setDesc(handleTextDesc(textDesc));
@@ -161,6 +175,7 @@ function DetailProduct() {
                   <div className={cn('flex-amount')}>
                      <div className={cn('product-amount')}>
                         <RemoveIcon
+                           sx={{ cursor: 'pointer' }}
                            onClick={() => {
                               if (amount > 0) {
                                  setAmount(amount - 1);
@@ -171,6 +186,7 @@ function DetailProduct() {
                         />
                         <h2 className={cn('amount')}>{amount}</h2>
                         <AddIcon
+                           sx={{ cursor: 'pointer' }}
                            onClick={() => {
                               if (amount >= prodInfo.sp_tonkho) {
                                  return;
@@ -184,7 +200,11 @@ function DetailProduct() {
 
                   <div className={cn('btns')}>
                      <div className={cn('add-to-cart-btn')}>
-                        <Button variant="outlined" style={{ color: 'var(--mainColor4)' }}>
+                        <Button
+                           variant="outlined"
+                           style={{ color: 'var(--mainColor4)' }}
+                           onClick={() => handleAddToCart()}
+                        >
                            <AddShoppingCartIcon sx={{ marginRight: '5px' }} />
                            Thêm vào giỏ hàng
                         </Button>

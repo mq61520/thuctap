@@ -57,6 +57,7 @@ function Login() {
             } else {
                localStorage.setItem('user_name', response.data[0].nd_hoten);
                localStorage.setItem('user_id', response.data[0].nd_id);
+               localStorage.setItem('is_logged', 1);
                window.open('http://127.0.0.1:5173/', '_self');
             }
          } else {

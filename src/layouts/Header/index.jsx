@@ -26,7 +26,7 @@ function Header() {
 
    const [searchBox, setSearchBox] = useState(false);
 
-   const user = localStorage.getItem('user_name');
+   const current_user = localStorage.getItem('user_id');
 
    const buttonStyle = { fontSize: '18px', color: '#333' };
 
@@ -90,25 +90,7 @@ function Header() {
             </Tippy>
 
             <div className={cn('right-features')}>
-               {user.length <= 0 ? (
-                  <div className={cn('actions')}>
-                     <div className={cn('register-btn')}>
-                        <Link to={'/register'}>
-                           <Button variant="text" sx={{ fontSize: 20 }}>
-                              Đăng ký
-                           </Button>
-                        </Link>
-                     </div>
-
-                     <div className={cn('register-btn')}>
-                        <Link to={'/login'}>
-                           <Button variant="text" sx={{ fontSize: 20 }}>
-                              Đăng nhập
-                           </Button>
-                        </Link>
-                     </div>
-                  </div>
-               ) : (
+               {current_user.length > 0 ? (
                   <div className={cn('account')}>
                      <div className={cn('cart-btn')}>
                         <Link to={'/cart'}>
@@ -163,6 +145,8 @@ function Header() {
                                              style={buttonStyle}
                                              onClick={() => {
                                                 localStorage.setItem('user_name', '');
+                                                localStorage.setItem('user_id', '');
+                                                localStorage.setItem('is_logged', 0);
                                                 window.open('http://127.0.0.1:5173', '_self');
                                              }}
                                           >
@@ -179,6 +163,24 @@ function Header() {
                            <h4>{localStorage.getItem('user_name')}</h4>
                         </div>
                      </Tippy>
+                  </div>
+               ) : (
+                  <div className={cn('actions')}>
+                     <div className={cn('register-btn')}>
+                        <Link to={'/register'}>
+                           <Button variant="text" sx={{ fontSize: 20 }}>
+                              Đăng ký
+                           </Button>
+                        </Link>
+                     </div>
+
+                     <div className={cn('register-btn')}>
+                        <Link to={'/login'}>
+                           <Button variant="text" sx={{ fontSize: 20 }}>
+                              Đăng nhập
+                           </Button>
+                        </Link>
+                     </div>
                   </div>
                )}
             </div>
