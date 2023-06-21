@@ -78,7 +78,23 @@ function DetailProduct() {
          toast.warn('Đăng nhập để thêm sản phẩm vào giỏ hàng.', { position: 'top-center' });
       } else {
          try {
-            toast.success('Them thanh cong.', { position: 'top-center' });
+            const add_cart_response = await axios.post('http://localhost:4000/cart/add', {
+               user_id: localStorage.getItem('user_id'),
+               ma_sp: prodInfo.sp_ma,
+               sl_sp: amount,
+            });
+
+            console.log(add_cart_response.data.status, add_cart_response.data.type);
+
+            if (add_cart_response.data.status === 'AddSuccess') {
+               if (add_cart_response.data.type === 'New') {
+               } else if (add_cart_response.data.type === 'Update') {
+               }
+
+               toast.success('Thêm vào giỏ hàng thành công.', { position: 'top-center' });
+            } else {
+               console.log('Lỗi');
+            }
          } catch (error) {
             console.log(error);
          }

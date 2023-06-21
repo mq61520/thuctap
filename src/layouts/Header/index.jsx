@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import classNames from 'classnames/bind';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -11,6 +14,7 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 // import Box from '@mui/material/Box';
 // import Popover from '@mui/material/Popover';
 // import Typography from '@mui/material/Typography';
+
 import Tippy from '@tippyjs/react/headless';
 import 'tippy.js/dist/tippy.css';
 import { Link } from 'react-router-dom';
@@ -18,6 +22,7 @@ import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Popper from '../../components/Popper';
 import SearchItem from '../../components/SearchItem';
+import { changeAmount } from '../../app/slices/cartSlice';
 
 const cn = classNames.bind(styles);
 
@@ -25,10 +30,35 @@ function Header() {
    document.title = 'Trang chủ';
 
    const [searchBox, setSearchBox] = useState(false);
-
    const current_user = localStorage.getItem('user_id');
-
    const buttonStyle = { fontSize: '18px', color: '#333' };
+
+   const cart = useSelector((state) => state.cart);
+   const dispatch = useDispatch();
+
+   const handleGetCartAmount = async () => {
+      const uid = localStorage.getItem('user_id');
+      if (localStorage.getItem('is_logged') == 1) {
+         try {
+            const amount_cart_response = await axios.get('http://localhost:4000/cart/amount/' + uid);
+
+            //   console.log('amount:' + amount_cart_response.data);
+            if (amount_cart_response.data == 'NoProduct') {
+               const action = changeAmount('0');
+               dispatch(action);
+            } else {
+               const action = changeAmount(amount_cart_response.data[0].amount);
+               dispatch(action);
+            }
+         } catch (error) {
+            console.log(error);
+         }
+      }
+   };
+
+   useEffect(() => {
+      handleGetCartAmount();
+   }, []);
 
    return (
       <header>
@@ -98,7 +128,7 @@ function Header() {
                               <ShoppingBagOutlinedIcon sx={{ fontSize: 45, color: 'var(--mainColor4)' }} />
                            </IconButton>
 
-                           <span>1</span>
+                           <span>{cart.amount}</span>
                         </Link>
                      </div>
 
