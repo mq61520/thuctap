@@ -44,7 +44,7 @@ function Header() {
 
             //   console.log('amount:' + amount_cart_response.data);
             if (amount_cart_response.data == 'NoProduct') {
-               const action = changeAmount('0');
+               const action = changeAmount(0);
                dispatch(action);
             } else {
                const action = changeAmount(amount_cart_response.data[0].amount);

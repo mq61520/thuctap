@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 
@@ -48,13 +49,17 @@ function Payment() {
       setShipType(event.target.value);
    };
 
-   //
+   //payment method
    const [payMethod, setPayMethod] = useState('COD');
 
    //paypal options
    const paypalOptions = {
       'client-id': 'AYyRYx-U9NtmJnlgAdILj9GM9l9GPW9LYRmFoeJ4J9JITKkKq_18zyGjujIxIYpdXyAgEzg8urAL2v2D',
    };
+
+   //selected list product
+   const pay = useSelector((state) => state.pay);
+   const dispatch = useDispatch();
 
    return (
       <div className={cn('payment-page')}>

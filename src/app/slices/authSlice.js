@@ -14,5 +14,5 @@ const authSlice = createSlice({
 });
 
 const { actions, reducer } = authSlice;
-export const { changeLoginName, changeLoginPwd, changeUserId, changeUserName, changeAdminName } = actions;
+export const { changeLoginName, changeLoginPwd } = actions;
 export default reducer;

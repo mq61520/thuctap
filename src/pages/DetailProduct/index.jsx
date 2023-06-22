@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import classNames from 'classnames/bind';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 
 //mui
 import Button from '@mui/material/Button';
@@ -21,13 +22,14 @@ import './Swiper.ProductDetail.scss';
 
 import styles from './DetailProduct.module.scss';
 import currencyFormater from '../../common/formatCurrency';
+import { changeAmount } from '../../app/slices/cartSlice';
 
 const cn = classNames.bind(styles);
 
 function DetailProduct() {
    const is_logged = localStorage.getItem('is_logged');
 
-   const [amount, setAmount] = useState(0);
+   const [amount, setAmount] = useState(1);
    const [showMoreDesc, setShowMoreDesc] = useState(false);
 
    const [desc, setDesc] = useState([]);
@@ -73,6 +75,8 @@ function DetailProduct() {
       }
    };
 
+   const cart = useSelector((state) => state.cart);
+   const dispatch = useDispatch();
    const handleAddToCart = async () => {
       if (is_logged === '0') {
          toast.warn('Đăng nhập để thêm sản phẩm vào giỏ hàng.', { position: 'top-center' });
@@ -88,11 +92,16 @@ function DetailProduct() {
 
             if (add_cart_response.data.status === 'AddSuccess') {
                if (add_cart_response.data.type === 'New') {
+                  setAmount(1);
+                  const update_amount_action = changeAmount(cart.amount + 1);
+                  dispatch(update_amount_action);
                } else if (add_cart_response.data.type === 'Update') {
+                  setAmount(1);
                }
 
                toast.success('Thêm vào giỏ hàng thành công.', { position: 'top-center' });
             } else {
+               setAmount(1);
                console.log('Lỗi');
             }
          } catch (error) {

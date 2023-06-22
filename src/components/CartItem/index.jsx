@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import classNames from 'classnames/bind';
 
 //mui
@@ -15,35 +16,59 @@ import currencyFormater from '../../common/formatCurrency';
 
 const cn = classNames.bind(styles);
 
-function CartItem({ ma_sp, image, ten_sp, sl_sp, gia_sp, km, deleted, check, updated }) {
+function CartItem({ gh_id, ma_sp, image, ten_sp, sl_sp, gia_sp, km, isRemoved, isChecked, isUpdated }) {
    const [checked, setChecked] = useState(false);
-   const [amount, setAmount] = useState(1);
+   const [amount, setAmount] = useState(sl_sp);
 
-   const handleChange = (event) => {
+   const handleCheck = (event) => {
       setChecked(event.target.checked);
+      isChecked(!checked);
+   };
+
+   const handleUpdateAmount = async (type) => {
+      try {
+         const update_response = await axios.post('http://localhost:4000/cart/update_amount', {
+            gh_id: gh_id,
+            type: type,
+         });
+
+         if (update_response.data === 'UpdateAmountSuccess') {
+            isUpdated('Updated');
+         }
+      } catch (err) {
+         console.log(err);
+      }
+   };
+
+   const handleRemove = async () => {
+      try {
+         const delete_response = await axios.get('http://localhost:4000/cart/delete/' + gh_id);
+         if (delete_response.data === 'DeleteSuccess') {
+            isRemoved('Removed');
+         }
+      } catch (err) {
+         console.log(err);
+      }
    };
 
    return (
       <div className={cn('product')}>
          <div className={cn('flex-info')}>
-            <Checkbox sx={{ fontSize: 26 }} checked={checked} onChange={handleChange} />
+            <Checkbox sx={{ fontSize: 26 }} checked={checked} onChange={handleCheck} />
 
             <div className={cn('product-img')}>
-               <img
-                  src="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_30282023_112849_1.jpg"
-                  alt="Ảnh sản phẩm"
-               />
+               <img src={'http://localhost:4000/' + image} alt="Ảnh sản phẩm" />
             </div>
 
             <div className={cn('product-name')}>
-               <h4>Alice In Borderland - Tập 11 - Tặng Kèm Card Giấy</h4>
+               <h4>{ten_sp}</h4>
             </div>
          </div>
 
          <div className={cn('price')}>
-            <h4 className={cn('old-price')}>{currencyFormater.format(1215112)}</h4>
+            <h4 className={cn('old-price')}>{currencyFormater.format(gia_sp)}</h4>
 
-            <h4 className={cn('current-price')}>{currencyFormater.format(2164542)}</h4>
+            <h4 className={cn('current-price')}>{currencyFormater.format(gia_sp)}</h4>
          </div>
 
          <div className={cn('product-amount')}>
@@ -52,8 +77,9 @@ function CartItem({ ma_sp, image, ten_sp, sl_sp, gia_sp, km, deleted, check, upd
                   onClick={() => {
                      if (amount > 1) {
                         setAmount(amount - 1);
+                        handleUpdateAmount('minus');
                      } else {
-                        toast.error('Không thể giảm thêm!', { position: 'top-center' });
+                        toast.warn('Không thể giảm thêm!', { position: 'top-center' });
                      }
                   }}
                >
@@ -63,6 +89,7 @@ function CartItem({ ma_sp, image, ten_sp, sl_sp, gia_sp, km, deleted, check, upd
                <IconButton
                   onClick={() => {
                      setAmount(amount + 1);
+                     handleUpdateAmount('increase');
                   }}
                >
                   <AddIcon sx={{ fontSize: 26, cursor: 'pointer' }} />
@@ -70,10 +97,10 @@ function CartItem({ ma_sp, image, ten_sp, sl_sp, gia_sp, km, deleted, check, upd
             </div>
          </div>
 
-         <h4 className={cn('product-prices')}>{currencyFormater.format(2125423)}</h4>
+         <h4 className={cn('product-prices')}>{currencyFormater.format(sl_sp * gia_sp)}</h4>
 
          <div className={cn('product-edit')}>
-            <IconButton>
+            <IconButton onClick={() => handleRemove()}>
                <DeleteOutlineIcon sx={{ fontSize: 26 }} />
             </IconButton>
          </div>
