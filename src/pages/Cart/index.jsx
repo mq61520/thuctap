@@ -12,7 +12,7 @@ import styles from './Cart.module.scss';
 import CartItem from '../../components/CartItem';
 import currencyFormater from '../../common/formatCurrency';
 import { changeAmount } from '../../app/slices/cartSlice';
-import { addToList, removeFromList } from '../../app/slices/paySlice';
+import { setCart, addToList, removeFromList } from '../../app/slices/paySlice';
 
 const cn = classNames.bind(styles);
 
@@ -70,6 +70,8 @@ function Cart() {
 
    useEffect(() => {
       handleGetProduct();
+      const action = setCart();
+      dispatch(action);
    }, []);
 
    console.log(pay.listProd);
@@ -104,19 +106,31 @@ function Cart() {
                               // km={p.promotion}
                               isChecked={(status) => {
                                  if (status == true) {
-                                    const action = addToList({ ma_sp: prod.info.sp_ma });
+                                    const action = addToList({
+                                       ma_sp: prod.info.sp_ma,
+                                       ten_sp: prod.info.sp_ten,
+                                       anh_sp: prod.info.sp_image,
+                                       sl_sp: prod.amount,
+                                       gia_sp: prod.info.sp_gia,
+                                       thanh_tien: prod.info.sp_gia * prod.amount,
+                                    });
                                     dispatch(action);
-                                    setTotal(total + prod.info.sp_gia);
+
+                                    setTotal(total + prod.info.sp_gia * prod.amount);
                                     setChecked(checked + 1);
                                  } else {
-                                    const action = removeFromList({ ma_sp: prod.info.sp_ma });
+                                    const action = removeFromList({
+                                       ma_sp: prod.info.sp_ma,
+                                    });
                                     dispatch(action);
-                                    setTotal(total - prod.info.sp_gia);
+
+                                    setTotal(total - prod.info.sp_gia * prod.amount);
                                     setChecked(checked - 1);
                                  }
                               }}
                               isUpdated={(status) => {
                                  if (status == 'Updated') {
+                                    handleGetProduct();
                                     console.log('updated');
                                  }
                               }}

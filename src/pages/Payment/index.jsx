@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
+import { toast } from 'react-toastify';
 
 //mui
 import Modal from '@mui/material/Modal';
@@ -58,8 +60,56 @@ function Payment() {
    };
 
    //selected list product
-   const pay = useSelector((state) => state.pay);
+   const listProd = useSelector((state) => state.pay);
    const dispatch = useDispatch();
+   console.log(listProd.listProd);
+
+   const [userInfo, setUserInfo] = useState('');
+   const handleGetUserInfo = async () => {
+      try {
+         const user_info_response = await axios.get(
+            'http://localhost:4000/account/get/' + localStorage.getItem('user_id'),
+         );
+
+         if (user_info_response.data) {
+            setUserInfo(user_info_response.data[0]);
+         }
+      } catch (err) {
+         console.log(err);
+      }
+   };
+
+   const [phone, setPhone] = useState('');
+   const [address, setAddress] = useState('');
+   const handleUpdateInfo = async () => {
+      if (phone.length <= 0 || address.length <= 0) {
+         toast.warn('Nhập đầy đủ thông tin.', { position: 'top-center' });
+      } else {
+         try {
+            const update_res = await axios.post('http://localhost:4000/account/change', {
+               phone: phone,
+               address: address,
+               user_id: localStorage.getItem('user_id'),
+            });
+
+            if (update_res.data === 'UpdateSuccess') {
+               handleGetUserInfo();
+               setOpenModal(false);
+               toast.success('Cập nhật thành công.', { position: 'top-center' });
+            } else {
+               toast.error('Lỗi.', { position: 'top-center' });
+            }
+         } catch (error) {
+            console.log(error);
+         }
+      }
+   };
+
+   var total = 0;
+
+   useEffect(() => {
+      handleGetUserInfo();
+   }, []);
 
    return (
       <div className={cn('payment-page')}>
@@ -73,8 +123,10 @@ function Payment() {
                </h3>
 
                <div className={cn('address')}>
-                  <h3 className={cn('customer-info')}>Nguyen Minh Quan (+84) 0559089553</h3>
-                  <h3 className={cn('customer-address')}>Duong 3/2 phuong Xuan Khanh quan Ninh Kieu tp Can Tho</h3>
+                  <h3 className={cn('customer-info')}>
+                     {userInfo.nd_hoten} (+84) {userInfo.nd_phonenumber == '' ? '...' : userInfo.nd_phonenumber}
+                  </h3>
+                  <h3 className={cn('customer-address')}>{userInfo.nd_address == '' ? '...' : userInfo.nd_address}</h3>
 
                   <div className={cn('change-address-btn')}>
                      <IconButton sx={{ ml: 2, fontSize: 18, color: 'var(--mainColor4)' }} onClick={handleOpen}>
@@ -102,16 +154,36 @@ function Payment() {
                         </div>
 
                         <div className={cn('modal-body')} style={{ marginTop: 26 }}>
-                           <TextField label="Số điện thoại" fullWidth margin="normal" size="large" />
+                           <TextField
+                              type="number"
+                              label="Số điện thoại"
+                              fullWidth
+                              margin="normal"
+                              size="large"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                           />
 
-                           <TextField label="Địa chỉ" fullWidth multiline margin="normal" size="large" />
+                           <TextField
+                              label="Địa chỉ"
+                              fullWidth
+                              multiline
+                              margin="normal"
+                              size="large"
+                              value={address}
+                              onChange={(e) => setAddress(e.target.value)}
+                           />
                         </div>
 
                         <div
                            className={cn('modal-btns')}
                            style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 26 }}
                         >
-                           <Button variant="outlined" sx={{ color: 'var(--mainColor4)' }}>
+                           <Button variant="outlined" sx={{ color: 'var(--mainColor4)', mr: 2 }} onClick={handleClose}>
+                              Hủy
+                           </Button>
+
+                           <Button variant="outlined" sx={{ color: 'var(--mainColor4)' }} onClick={handleUpdateInfo}>
                               Thay đổi
                            </Button>
                         </div>
@@ -132,49 +204,36 @@ function Payment() {
                </div>
 
                <div className={cn('products-list')}>
-                  <div className={cn('product')}>
-                     <div className={cn('product-info')}>
-                        <img
-                           src="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_30282023_112849_1.jpg"
-                           alt="Anh san pham"
-                        />
+                  {listProd.listProd.map((product) => {
+                     total += product.gia_sp * product.sl_sp;
+                     return (
+                        <div className={cn('product')} key={product.ma_sp}>
+                           <div className={cn('product-info')}>
+                              <img src={'http://localhost:4000/' + product.anh_sp} alt="Anh san pham" />
 
-                        <h4 className={cn('product-name')}>Alice In Borderland - Tập 11 - Tặng Kèm Card Giấy</h4>
-                     </div>
+                              <h4 className={cn('product-name')}>{product.ten_sp}</h4>
+                           </div>
 
-                     <h4 className={cn('product-unit-price')}>{currencyFormater.format(6546132)}</h4>
+                           <h4 className={cn('product-unit-price')}>{currencyFormater.format(product.gia_sp)}</h4>
 
-                     <h4 className={cn('product-amount')}>9000</h4>
+                           <h4 className={cn('product-amount')}>{product.sl_sp}</h4>
 
-                     <h4 className={cn('product-total-price')}>{currencyFormater.format(15165213)}</h4>
-                  </div>
-
-                  <div className={cn('product')}>
-                     <div className={cn('product-info')}>
-                        <img
-                           src="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_30282023_112849_1.jpg"
-                           alt="Anh san pham"
-                        />
-
-                        <h4 className={cn('product-name')}>Alice In Borderland - Tập 11 - Tặng Kèm Card Giấy</h4>
-                     </div>
-
-                     <h4 className={cn('product-unit-price')}>{currencyFormater.format(6546132)}</h4>
-
-                     <h4 className={cn('product-amount')}>9000</h4>
-
-                     <h4 className={cn('product-total-price')}>{currencyFormater.format(15165213)}</h4>
-                  </div>
+                           <h4 className={cn('product-total-price')}>
+                              {currencyFormater.format(product.gia_sp * product.sl_sp)}
+                           </h4>
+                        </div>
+                     );
+                  })}
                </div>
 
                <div className={cn('shipping-unit')}>
                   <h4 style={{ flex: '1', color: '#333' }}>Hình thức vận chuyển</h4>
 
-                  <Select value={shipType} onChange={handleChange} sx={{ width: 'fit-content', fontSize: 20 }}>
-                     <MenuItem value={50000} sx={{ fontSize: 20 }}>
+                  <Select value={shipType} onChange={handleChange} sx={{ width: 'fit-content', fontSize: 19 }}>
+                     <MenuItem value={50000} sx={{ fontSize: 19 }}>
                         Nhanh - {currencyFormater.format(50000)}
                      </MenuItem>
-                     <MenuItem value={70000} sx={{ fontSize: 20 }}>
+                     <MenuItem value={70000} sx={{ fontSize: 19 }}>
                         Hỏa tốc - {currencyFormater.format(70000)}
                      </MenuItem>
                   </Select>
@@ -199,7 +258,7 @@ function Payment() {
 
                   <div className={cn('order-total-price')}>
                      <span style={{ fontSize: '20px' }}>Tổng số tiền: </span>
-                     <h3>{currencyFormater.format(23654524)}</h3>
+                     <h3>{currencyFormater.format(total + shipType)}</h3>
                   </div>
                </div>
             </div>
@@ -262,16 +321,16 @@ function Payment() {
 
             <div className={cn('total')}>
                <h4 className={cn('total-price-products')}>
-                  Tổng tiền hàng:<span>{currencyFormater.format(21245121)}</span>
+                  Tổng tiền hàng:<span>{currencyFormater.format(total)}</span>
                </h4>
 
                <h4 className={cn('ship-price')}>
-                  Phí vận chuyển:<span>{currencyFormater.format(52121)}</span>
+                  Phí vận chuyển:<span>{currencyFormater.format(shipType)}</span>
                </h4>
 
                <h4 className={cn('total-pay')}>
                   Tổng thanh toán:
-                  <span className={cn('total-pay-color')}>{currencyFormater.format(515451)}</span>
+                  <span className={cn('total-pay-color')}>{currencyFormater.format(total + shipType)}</span>
                </h4>
 
                <div className={cn('submit-pay-btn')}>
