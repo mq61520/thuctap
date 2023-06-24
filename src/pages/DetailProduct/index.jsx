@@ -23,10 +23,13 @@ import './Swiper.ProductDetail.scss';
 import styles from './DetailProduct.module.scss';
 import currencyFormater from '../../common/formatCurrency';
 import { changeAmount } from '../../app/slices/cartSlice';
+import { addToList, setLocation, setPayList } from '../../app/slices/paySlice';
+import { Link } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
 function DetailProduct() {
+   const dispatch = useDispatch();
    const is_logged = localStorage.getItem('is_logged');
 
    const [amount, setAmount] = useState(1);
@@ -76,7 +79,6 @@ function DetailProduct() {
    };
 
    const cart = useSelector((state) => state.cart);
-   const dispatch = useDispatch();
    const handleAddToCart = async () => {
       if (is_logged === '0') {
          toast.warn('Đăng nhập để thêm sản phẩm vào giỏ hàng.', { position: 'top-center' });
@@ -107,6 +109,29 @@ function DetailProduct() {
          } catch (error) {
             console.log(error);
          }
+      }
+   };
+
+   // const pay = useSelector((state) => state.pay);
+   const handleBuyNow = async () => {
+      const action = setPayList();
+      dispatch(action);
+
+      if (is_logged === '1') {
+         const action = addToList({
+            ma_sp: prodInfo.sp_ma,
+            ten_sp: prodInfo.sp_ten,
+            anh_sp: prodInfo.sp_image,
+            sl_sp: amount,
+            gia_sp: prodInfo.sp_gia,
+            thanh_tien: prodInfo.sp_gia * amount,
+         });
+         dispatch(action);
+
+         const update_location = setLocation('BuyNow');
+         dispatch(update_location);
+      } else {
+         toast.warn('Đăng nhập để mua hàng.', { position: 'top-center' });
       }
    };
 
@@ -236,10 +261,16 @@ function DetailProduct() {
                      </div>
 
                      <div className={cn('buy-now-btn')}>
-                        <Button variant="contained" style={{ backgroundColor: 'var(--mainColor4)' }}>
-                           <AccountBalanceWalletOutlinedIcon sx={{ marginRight: '5px' }} />
-                           Mua ngay
-                        </Button>
+                        <Link to={is_logged === '0' ? '' : '/checkout'}>
+                           <Button
+                              variant="contained"
+                              style={{ backgroundColor: 'var(--mainColor4)' }}
+                              onClick={handleBuyNow}
+                           >
+                              <AccountBalanceWalletOutlinedIcon sx={{ marginRight: '5px' }} />
+                              Mua ngay
+                           </Button>
+                        </Link>
                      </div>
                   </div>
                </div>

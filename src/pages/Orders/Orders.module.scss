@@ -5,13 +5,18 @@
 
    & .orders-list {
       width: 85%;
+      display: grid;
+      grid-template-columns: 640px 640px;
+      gap: 13px;
       padding: 16px 0;
 
       & .order {
-         margin-bottom: 10px;
-         padding: 20px;
+         width: 640px;
+         height: fit-content;
+         padding: 8px;
          border-radius: 8px;
          background-color: white;
+         position: relative;
 
          & .order-header {
             display: flex;
@@ -55,20 +60,19 @@
                }
 
                & img {
-                  width: 100px;
-                  height: 100px;
+                  width: 80px;
+                  height: 80px;
                   object-fit: cover;
                }
 
                & .flex-info {
-                  height: 100px;
+                  height: 80px;
                   display: flex;
                   flex-direction: column;
                   justify-content: flex-start;
                   margin-left: 10px;
 
                   & .product-name {
-                     width: 750px;
                      font-size: 19px;
                      font-weight: 400;
                   }
@@ -117,6 +121,13 @@
             display: flex;
             justify-content: flex-end;
             margin: 10px 10px;
+         }
+
+         & .cancel-flag {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
          }
       }
 

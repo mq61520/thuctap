@@ -70,7 +70,7 @@ function Header() {
                </div>
             </Link>
 
-            <Tippy
+            {/* <Tippy
                visible={searchBox}
                interactive
                placement="bottom-end"
@@ -95,7 +95,7 @@ function Header() {
                               <span>BlueLock - Tập 7</span>
                               <CloseIcon sx={{ fontSize: 16 }}></CloseIcon>
                            </div>
-                        </div> */}
+                        </div> 
                      </Popper>
                   </div>
                )}
@@ -117,7 +117,7 @@ function Header() {
                      </IconButton>
                   </div>
                </div>
-            </Tippy>
+            </Tippy> */}
 
             <div className={cn('right-features')}>
                {current_user.length > 0 ? (

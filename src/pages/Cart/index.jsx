@@ -12,7 +12,7 @@ import styles from './Cart.module.scss';
 import CartItem from '../../components/CartItem';
 import currencyFormater from '../../common/formatCurrency';
 import { changeAmount } from '../../app/slices/cartSlice';
-import { setCart, addToList, removeFromList } from '../../app/slices/paySlice';
+import { addToList, removeFromList, setLocation, setPayList } from '../../app/slices/paySlice';
 
 const cn = classNames.bind(styles);
 
@@ -70,7 +70,7 @@ function Cart() {
 
    useEffect(() => {
       handleGetProduct();
-      const action = setCart();
+      const action = setPayList();
       dispatch(action);
    }, []);
 
@@ -115,6 +115,9 @@ function Cart() {
                                        thanh_tien: prod.info.sp_gia * prod.amount,
                                     });
                                     dispatch(action);
+
+                                    const update_location = setLocation('FromCart');
+                                    dispatch(update_location);
 
                                     setTotal(total + prod.info.sp_gia * prod.amount);
                                     setChecked(checked + 1);
