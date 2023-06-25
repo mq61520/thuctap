@@ -39,7 +39,9 @@
       }
 
       & .check {
-         width: 90px;
+         width: 180px;
+         display: flex;
+         justify-content: center;
       }
 
       & .change-order-status {

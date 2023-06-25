@@ -12,8 +12,42 @@ const cn = classNames.bind(styles);
 
 function OrderManager() {
    const auth = useSelector((state) => state.auth);
-
    console.log(auth);
+
+   const [orders, setOrders] = useState([]);
+   const handleGetOrders = async () => {
+      try {
+         const get_order_list_res = await axios.get('http://localhost:4000/order/all');
+         // console.log(get_order_list_res.data);
+
+         var order_list = [];
+         if (get_order_list_res.data.length > 0) {
+            for (let i = 0; i < get_order_list_res.data.length; i++) {
+               var detail_list = [];
+
+               for (let k = 0; k < get_order_list_res.data[i].dh_slsp; k++) {
+                  const product_res = await axios.get(
+                     'http://localhost:4000/order/detail/' + get_order_list_res.data[i].dh_ma,
+                  );
+
+                  detail_list.push(product_res.data[k]);
+               }
+               order_list.push({ order_info: get_order_list_res.data[i], list_prod: detail_list });
+            }
+            setOrders(order_list);
+         } else {
+            console.log('K co don hang');
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   useEffect(() => {
+      handleGetOrders();
+   }, []);
+
+   console.log(orders);
 
    return (
       <div className={cn('body')}>
@@ -35,8 +69,32 @@ function OrderManager() {
             </div>
 
             <div className={cn('list')}>
-               <OrderItem checked />
-               <OrderItem checked />
+               {orders.length > 0 ? (
+                  orders.map((order) => {
+                     console.log(order.order_info.dh_trangthai);
+                     return (
+                        <OrderItem
+                           key={order.order_info.dh_ma}
+                           order_info={order.order_info}
+                           product_list={order.list_prod}
+                           isConfirm={(status) => {
+                              if (status === 'ConfirmSuccess') {
+                                 toast.success('Đã duyệt đơn hàng.', { position: 'top-center' });
+                                 handleGetOrders();
+                              }
+                           }}
+                           isUpdateStatus={(status) => {
+                              if (status === 'UpdateStatusSuccess') {
+                                 toast.success('Cập nhật trạng thái thành công..', { position: 'top-center' });
+                                 handleGetOrders();
+                              }
+                           }}
+                        />
+                     );
+                  })
+               ) : (
+                  <></>
+               )}
             </div>
          </div>
       </div>

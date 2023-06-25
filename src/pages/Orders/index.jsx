@@ -112,7 +112,7 @@ function Orders() {
                            {currencyFormater.format(order.order_info.dh_tongtien)}
                         </h3>
 
-                        {order.order_info.dh_trangthai === 'Chờ lấy hàng' ? (
+                        {order.order_info.dh_trangthai === 'Chờ xác nhận' ? (
                            <div className={cn('order-actions')}>
                               <div className={cn('cancel-order-btn')}>
                                  <Button

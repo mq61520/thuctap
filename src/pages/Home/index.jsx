@@ -23,7 +23,6 @@ const cn = classNames.bind(styles);
 
 function Home() {
    const [listProd, setListProd] = useState([]);
-
    const handleGetProductList = async () => {
       try {
          const product_list = await axios.get('http://localhost:4000/product/all');
@@ -39,11 +38,28 @@ function Home() {
       }
    };
 
+   const [brands, setBrands] = useState([]);
+   const handleGetBrand = async () => {
+      try {
+         const brand_list = await axios.get('http://localhost:4000/brands');
+
+         if (brand_list.data.length > 0) {
+            setBrands(brand_list.data);
+            console.log(brand_list.data);
+         } else {
+            console.log('Lỗi');
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
    // const dispatch = useDispatch();
    // const action = setPayList();
    // dispatch(action);
    useEffect(() => {
       handleGetProductList();
+      handleGetBrand();
    }, []);
 
    return (
@@ -113,16 +129,18 @@ function Home() {
                   >
                      {listProd.length > 0 ? (
                         listProd.map((product) => {
-                           return (
-                              <SwiperSlide key={product.sp_id}>
-                                 <ProductItem
-                                    ma_sp={product.sp_ma}
-                                    img={product.sp_image}
-                                    ten={product.sp_ten}
-                                    gia={product.sp_gia}
-                                 />
-                              </SwiperSlide>
-                           );
+                           if (product.sp_trangthai === '1') {
+                              return (
+                                 <SwiperSlide key={product.sp_id}>
+                                    <ProductItem
+                                       ma_sp={product.sp_ma}
+                                       img={product.sp_image}
+                                       ten={product.sp_ten}
+                                       gia={product.sp_gia}
+                                    />
+                                 </SwiperSlide>
+                              );
+                           }
                         })
                      ) : (
                         <></>
@@ -153,48 +171,17 @@ function Home() {
                         fontWeight: '400',
                      }}
                   >
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <CategoryItem />
-                     </SwiperSlide>
+                     {brands.length > 0 ? (
+                        brands.map((brand) => {
+                           return (
+                              <SwiperSlide key={brand.dm_id}>
+                                 <CategoryItem ten_dm={brand.dm_ten} ma_dm={brand.dm_ma} />
+                              </SwiperSlide>
+                           );
+                        })
+                     ) : (
+                        <></>
+                     )}
                   </Swiper>
                </div>
             </div>

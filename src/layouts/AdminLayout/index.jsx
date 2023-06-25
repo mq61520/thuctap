@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
+import { Link } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -9,11 +11,9 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import Tippy from '@tippyjs/react/headless';
 import 'tippy.js/dist/tippy.css';
 
-import { useDispatch, useSelector } from 'react-redux';
-
 import styles from './AdminLayout.module.scss';
 import Popper from '../../components/Popper';
-import { Link } from 'react-router-dom';
+import { changeLoginName, changeLoginPwd } from '../../app/slices/authSlice';
 
 const cn = classNames.bind(styles);
 
@@ -24,6 +24,7 @@ function AdminLayout({ children }) {
       setAlignment(newAlignment);
    };
 
+   const dispatch = useDispatch();
    const auth = useSelector((state) => state.auth);
 
    return (
@@ -69,6 +70,10 @@ function AdminLayout({ children }) {
                               sx={{ backgroundColor: 'var(--mainColor4)' }}
                               onClick={() => {
                                  localStorage.setItem('admin_name', '');
+                                 const action1 = changeLoginName('');
+                                 const action2 = changeLoginPwd('');
+                                 dispatch(action1);
+                                 dispatch(action2);
                                  window.open('http://127.0.0.1:5173/login', '_self');
                               }}
                            >
