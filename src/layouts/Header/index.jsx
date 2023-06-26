@@ -70,6 +70,16 @@ function Header() {
                </div>
             </Link>
 
+            <div className={cn('nav-list')}>
+               <Link to={'/'}>
+                  <div className={cn('nav-item')}>Trang chủ</div>
+               </Link>
+               <div className={cn('nav-item')}>Danh mục</div>
+               <Link to={'/products'}>
+                  <div className={cn('nav-item')}>Sản phẩm</div>
+               </Link>
+            </div>
+
             {/* <Tippy
                visible={searchBox}
                interactive
@@ -198,7 +208,7 @@ function Header() {
                   <div className={cn('actions')}>
                      <div className={cn('register-btn')}>
                         <Link to={'/register'}>
-                           <Button variant="text" sx={{ fontSize: 20 }}>
+                           <Button variant="text" sx={{ fontSize: 18, fontWeight: '400', color: 'var(--mainColor4)' }}>
                               Đăng ký
                            </Button>
                         </Link>
@@ -206,7 +216,7 @@ function Header() {
 
                      <div className={cn('register-btn')}>
                         <Link to={'/login'}>
-                           <Button variant="text" sx={{ fontSize: 20 }}>
+                           <Button variant="text" sx={{ fontSize: 18, fontWeight: '400', color: 'var(--mainColor4)' }}>
                               Đăng nhập
                            </Button>
                         </Link>

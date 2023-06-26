@@ -1,0 +1,22 @@
+.product-page {
+   width: 100%;
+   display: flex;
+   justify-content: center;
+
+   & .inner {
+      width: 1291px;
+      margin-top: 16px;
+
+      & h4 {
+         font-size: 24px;
+         font-weight: 400;
+      }
+
+      & .product-list {
+         display: grid;
+         grid-template-columns: 200px 200px 200px 200px 200px 200px;
+         gap: 18.5px;
+         margin-top: 16px;
+      }
+   }
+}

@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import authSlice from './slices/authSlice';
 import cartSlice from './slices/cartSlice';
 import paySlice from './slices/paySlice';
+import productSlice from './slices/productSlice';
 
 const persistConfig = {
    key: 'root',
@@ -16,6 +17,7 @@ const rootReducer = {
    auth: authSlice,
    cart: cartSlice,
    pay: paySlice,
+   product: productSlice,
 };
 
 const persistedReducer = persistReducer(persistConfig, combineReducers(rootReducer));

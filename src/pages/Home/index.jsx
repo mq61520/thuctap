@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames/bind';
 import AutoAwesomeMosaicOutlinedIcon from '@mui/icons-material/AutoAwesomeMosaicOutlined';
@@ -17,7 +17,6 @@ import '../../common/swiper-button.scss';
 import styles from './Home.module.scss';
 import ProductItem from '../../components/ProductItem';
 import CategoryItem from '../../components/CategoryItem';
-import { setPayList } from '../../app/slices/paySlice';
 
 const cn = classNames.bind(styles);
 
@@ -54,9 +53,7 @@ function Home() {
       }
    };
 
-   // const dispatch = useDispatch();
-   // const action = setPayList();
-   // dispatch(action);
+   const product = useSelector((state) => state.product);
    useEffect(() => {
       handleGetProductList();
       handleGetBrand();
