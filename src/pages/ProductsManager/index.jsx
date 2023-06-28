@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 
 //mui
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
@@ -16,8 +18,13 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
+//tippy
+import Tippy from '@tippyjs/react/headless';
+import 'tippy.js/dist/tippy.css';
+
 import styles from './ProductsManager.module.scss';
 import currencyFormater from '../../common/formatCurrency';
+import './ProductsManager.scss';
 import Popper from '../../components/Popper';
 
 const cn = classNames.bind(styles);
@@ -26,10 +33,7 @@ function ProductsManager() {
    document.title = 'Quản lý hàng hóa';
 
    //modal
-   const [openModal, setOpenModal] = useState(false);
-   const handleOpen = () => setOpenModal(true);
-   const handleClose = () => setOpenModal(false);
-   const styleModal = {
+   const styleModalProduct = {
       position: 'absolute',
       top: '50%',
       left: '50%',
@@ -40,6 +44,40 @@ function ProductsManager() {
       boxShadow: 24,
       padding: '20px',
    };
+   const styleModalPromotion = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 'fit-content',
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      boxShadow: 24,
+      padding: '20px',
+   };
+   const styleModalProdPromotion = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 'fit-content',
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      boxShadow: 24,
+      padding: '20px',
+   };
+   //state of modal add product
+   const [openModal, setOpenModal] = useState(false);
+   const handleOpen = () => setOpenModal(true);
+   const handleClose = () => setOpenModal(false);
+   //state of modal promotion
+   const [openModalPromotion, setOpenModalPromotion] = useState(false);
+   const handleOpenPromotion = () => setOpenModalPromotion(true);
+   const handleClosePromotion = () => setOpenModalPromotion(false);
+   //state of modal ProdPromotion
+   const [openModalProdPromotion, setOpenModalProdPromotion] = useState(false);
+   const handleOpenProdPromotion = () => setOpenModalProdPromotion(true);
+   const handleCloseProdPromotion = () => setOpenModalProdPromotion(false);
 
    const [listProd, setListProd] = useState([]);
 
@@ -47,6 +85,7 @@ function ProductsManager() {
    const [prodName, setProdName] = useState('');
    const [prodAmount, setProdAmount] = useState('');
    const [prodPrice, setProdPrice] = useState('');
+   const [brand, setBrand] = useState(1);
    const [prodDesc, setProdDesc] = useState('');
    const [imgSp, setImgSp] = useState([]);
 
@@ -58,6 +97,7 @@ function ProductsManager() {
             ten: prodName,
             sl: prodAmount,
             gia: prodPrice,
+            danhmuc: brand,
             mota: prodDesc,
          });
          // console.log(add_product_res);
@@ -92,6 +132,7 @@ function ProductsManager() {
             setProdAmount('');
             setProdPrice('');
             setProdDesc('');
+            setBrand(1);
             setImgSp([]);
 
             handleGetProductList();
@@ -159,9 +200,57 @@ function ProductsManager() {
       }
    };
 
+   const [brands, setBrands] = useState([]);
+   const handleGetBrand = async () => {
+      try {
+         const brand_list = await axios.get('http://localhost:4000/brands');
+
+         if (brand_list.data.length > 0) {
+            setBrands(brand_list.data);
+            console.log(brand_list.data);
+         } else {
+            console.log('Lỗi');
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   const [promotion, setPromotion] = useState('');
+   const [dateStart, setDateStart] = useState('');
+   const [dateEnd, setDateEnd] = useState('');
+   const handleAddPromotion = async () => {
+      try {
+         const add_promotion_response = await axios.post('http://localhost:4000/promotion/add', {
+            value: promotion,
+            date_start: dateStart,
+            date_end: dateEnd,
+         });
+
+         if (add_promotion_response.data === 'InsertPromotionSuccess') {
+            toast.success('Thêm thành công.', { position: 'top-center' });
+         } else if (add_promotion_response.data === 'AddFail') {
+            toast.error('Lỗi.', { position: 'top-center' });
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   const [promotionList, setPromotionList] = useState([]);
+   const handleGetPromotionList = async () => {
+      const promotion_list_response = await axios.get('http://localhost:4000/promotion/all');
+
+      if (promotion_list_response.data.length > 0) {
+         setPromotionList(promotion_list_response.data);
+      }
+   };
+
    var stt = 0;
    useEffect(() => {
       handleGetProductList();
+      handleGetBrand();
+      handleGetPromotionList();
    }, []);
 
    return (
@@ -174,13 +263,96 @@ function ProductsManager() {
                   variant="contained"
                   startIcon={<AddIcon sx={{ width: '30px', height: '30px' }} />}
                   sx={{ width: '200px', height: '42px', fontSize: '20px', backgroundColor: 'var(--mainColor4)' }}
+                  onClick={handleOpenPromotion}
+               >
+                  Khuyến mãi
+               </Button>
+
+               <Modal open={openModalPromotion} onClose={handleClosePromotion}>
+                  <div className={cn('change-address-modal-container')} style={styleModalPromotion}>
+                     <div
+                        className={cn('modal-header')}
+                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                     >
+                        <h4 style={{ fontSize: 24, fontWeight: 400, color: '#333' }}>Tạo khuyến mãi</h4>
+
+                        <IconButton
+                           onClick={() => {
+                              setOpenModalPromotion(false);
+                           }}
+                        >
+                           <CloseIcon />
+                        </IconButton>
+                     </div>
+
+                     <div className={cn('modal-body')} style={{ display: 'flex', alignItems: 'center', marginTop: 26 }}>
+                        <TextField
+                           type="number"
+                           label="% giảm"
+                           fullWidth
+                           size="large"
+                           sx={{ width: 'fit-content' }}
+                           value={promotion}
+                           onChange={(e) => {
+                              setPromotion(e.target.value);
+                           }}
+                        />
+
+                        <input
+                           type="date"
+                           style={{ margin: '0 10px' }}
+                           onChange={(e) => {
+                              setDateStart(e.target.value);
+                           }}
+                        />
+
+                        <input
+                           type="date"
+                           onChange={(e) => {
+                              setDateEnd(e.target.value);
+                           }}
+                        />
+                     </div>
+
+                     <div
+                        className={cn('modal-footer')}
+                        style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 26 }}
+                     >
+                        <Button
+                           variant="outlined"
+                           sx={{ width: '120px', color: 'var(--mainColor4)', margin: '0 10px' }}
+                           onClick={handleClosePromotion}
+                        >
+                           Đóng
+                        </Button>
+
+                        <Button
+                           variant="contained"
+                           sx={{ width: '120px', backgroundColor: 'var(--mainColor4)' }}
+                           onClick={() => {
+                              handleAddPromotion();
+                              handleGetPromotionList();
+                           }}
+                        >
+                           Tạo
+                        </Button>
+                     </div>
+                  </div>
+               </Modal>
+            </div>
+
+            <div className={cn('crud-btn')}>
+               <Button
+                  variant="contained"
+                  startIcon={<AddIcon sx={{ width: '30px', height: '30px' }} />}
+                  sx={{ width: 'fit-content', height: '42px', fontSize: '20px', backgroundColor: 'var(--mainColor4)' }}
                   onClick={handleOpen}
                >
-                  Thêm
+                  Sản Phẩm
                </Button>
 
                <Modal open={openModal} onClose={handleClose}>
-                  <div className={cn('change-address-modal-container')} style={styleModal}>
+                  <div className={cn('change-address-modal-container')} style={styleModalProduct}>
                      <div
                         className={cn('modal-header')}
                         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -223,8 +395,8 @@ function ProductsManager() {
                               }}
                            />
                            <TextField
-                              label="Số lượng"
                               type="number"
+                              label="Số lượng"
                               fullWidth
                               multiline
                               size="large"
@@ -235,6 +407,7 @@ function ProductsManager() {
                               }}
                            />
                            <TextField
+                              type="number"
                               label="Giá"
                               fullWidth
                               multiline
@@ -245,6 +418,28 @@ function ProductsManager() {
                                  setProdPrice(e.target.value);
                               }}
                            />
+
+                           <Select
+                              value={brand}
+                              onChange={(e) => setBrand(e.target.value)}
+                              sx={{ width: 'fit-content', fontSize: 16, mt: 2, mb: 2 }}
+                           >
+                              <MenuItem disabled value={1} sx={{ fontSize: 16 }}>
+                                 -- Chọn danh mục --
+                              </MenuItem>
+
+                              {brands.length > 0 ? (
+                                 brands.map((brand) => {
+                                    return (
+                                       <MenuItem key={brand.dm_id} value={brand.dm_ten} sx={{ fontSize: 16 }}>
+                                          {brand.dm_ten}
+                                       </MenuItem>
+                                    );
+                                 })
+                              ) : (
+                                 <></>
+                              )}
+                           </Select>
                         </div>
                         <div className={cn('right-side')} style={{ width: '500px' }}>
                            <TextField
@@ -350,13 +545,60 @@ function ProductsManager() {
                               <img src={'http://localhost:4000/' + product.sp_image} alt="Ảnh sản phẩm" />
                               <h4 className={cn('product-name')}>{product.sp_ten}</h4>
                            </div>
-                           <h4 className={cn('product-price')}>{currencyFormater.format(product.sp_gia)}</h4>
+                           <div className={cn('product-price')}>
+                              <h4 className={cn('product-price-curent')}>{currencyFormater.format(product.sp_gia)}</h4>
+                              <h4 className={cn('product-promotion')}>(-20%)</h4>
+                              <h4 className={cn('product-price-old')}>{currencyFormater.format(product.sp_gia)}</h4>
+                           </div>
                            <h4 className={cn('product-instock')}>{product.sp_tonkho}</h4>
-                           <h4 className={cn('product-promotion')}>
-                              <IconButton>
-                                 <SellOutlinedIcon />
-                              </IconButton>
-                           </h4>
+
+                           <Tippy
+                              interactive
+                              // visible
+                              placement="bottom"
+                              render={(attrs) => (
+                                 <div className={cn('content')} tabIndex="-1" {...attrs}>
+                                    <Popper>
+                                       <div className={cn('tippy-promotion')}>
+                                          <div className={cn('promotion-list')}>
+                                             <h4>Danh sách khuyến mãi hiện có.</h4>
+                                             {promotionList.length > 0 ? (
+                                                promotionList.map((promotion) => {
+                                                   return (
+                                                      <div className={cn('promotion')} key={promotion.km_id}>
+                                                         <h4 className={cn('promotion-value')}>
+                                                            {promotion.km_giatri}%
+                                                         </h4>
+                                                         <div className={cn('promotion-date')}>
+                                                            <p className={cn('promotion-date-item')}>
+                                                               <i>Bđầu:</i> {promotion.ngaybatdau}
+                                                            </p>
+                                                            <p className={cn('promotion-date-item')}>
+                                                               <i>Kthúc:</i> {promotion.ngayketthuc}
+                                                            </p>
+                                                         </div>
+                                                         <Button variant="outlined" sx={{ color: 'var(--mainColor4)' }}>
+                                                            Áp dụng
+                                                         </Button>
+                                                      </div>
+                                                   );
+                                                })
+                                             ) : (
+                                                <h4>Hiện chưa có khuyến mãi nào.</h4>
+                                             )}
+                                          </div>
+                                       </div>
+                                    </Popper>
+                                 </div>
+                              )}
+                           >
+                              <h4 className={cn('product-promotion')}>
+                                 <IconButton>
+                                    <SellOutlinedIcon />
+                                 </IconButton>
+                              </h4>
+                           </Tippy>
+
                            <h4 className={cn('product-del')}>
                               <IconButton onClick={() => hanldeRemoveProduct(product.sp_ma)}>
                                  <DeleteOutlineOutlinedIcon />

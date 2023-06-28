@@ -1,0 +1,22 @@
+input[type='date'] {
+   height: 56px;
+   // background-color: #0080ff;
+   padding: 0 15px;
+   // position: absolute;
+   // transform: translate(-50%, -50%);
+   // top: 50%;
+   // left: 50%;
+   // font-family: 'Roboto Mono', monospace;
+   color: #888;
+   font-size: 18px;
+   border: 1px solid #999;
+   outline: none;
+   border-radius: 5px;
+}
+
+::-webkit-calendar-picker-indicator {
+   background-color: #ffffff;
+   padding: 5px;
+   cursor: pointer;
+   border-radius: 3px;
+}

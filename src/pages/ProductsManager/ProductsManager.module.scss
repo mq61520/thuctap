@@ -9,9 +9,13 @@
    }
 
    & .product-crud {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
       & .crud-btn {
          margin-top: 10px;
-         margin-right: 10px;
+         margin-left: 10px;
          display: flex;
          justify-content: right;
       }
@@ -116,11 +120,66 @@
 
             & .product-price {
                width: 110px;
+               display: flex;
+               flex-direction: column;
+               align-items: center;
                color: var(--mainColor4);
+
+               & h4 {
+                  font-size: 19px;
+               }
+
+               & .product-promotion {
+                  color: lightcoral;
+                  font-size: 16px;
+               }
+
+               & .product-price-old {
+                  text-decoration: line-through;
+                  color: grey;
+                  font-size: 16px;
+               }
             }
 
             & .product-instock {
                width: 80px;
+               font-size: 18px;
+            }
+
+            & .tippy-promotion {
+               padding: 6px;
+               border-radius: 5px;
+               background-color: #f0f0f0;
+
+               & .promotion-list {
+                  & h4 {
+                     text-align: left;
+                     margin-bottom: 10px;
+                  }
+
+                  & .promotion {
+                     display: flex;
+                     justify-content: space-between;
+                     align-items: center;
+                     padding: 4px 0;
+                     border-bottom: 1px solid #999;
+
+                     &:last-child {
+                        border-bottom: none;
+                     }
+
+                     & .promotion-value {
+                        font-size: 30px;
+                        color: var(--mainColor4);
+                     }
+
+                     & .promotion-date {
+                        margin: 0 8px;
+                        & .promotion-date-item {
+                        }
+                     }
+                  }
+               }
             }
 
             & .product-promotion {
