@@ -274,7 +274,7 @@ function Payment() {
 
                      <div className={cn('products-list')}>
                         {listProd.listProd.map((product) => {
-                           total += product.gia_sp * product.sl_sp;
+                           total += product.gia_km * product.sl_sp;
                            return (
                               <div className={cn('product')} key={product.ma_sp}>
                                  <div className={cn('product-info')}>
@@ -283,12 +283,12 @@ function Payment() {
                                     <h4 className={cn('product-name')}>{product.ten_sp}</h4>
                                  </div>
 
-                                 <h4 className={cn('product-unit-price')}>{currencyFormater.format(product.gia_sp)}</h4>
+                                 <h4 className={cn('product-unit-price')}>{currencyFormater.format(product.gia_km)}</h4>
 
                                  <h4 className={cn('product-amount')}>{product.sl_sp}</h4>
 
                                  <h4 className={cn('product-total-price')}>
-                                    {currencyFormater.format(product.gia_sp * product.sl_sp)}
+                                    {currencyFormater.format(product.gia_km * product.sl_sp)}
                                  </h4>
                               </div>
                            );

@@ -66,9 +66,9 @@ function CartItem({ gh_id, ma_sp, image, ten_sp, sl_sp, gia_sp, km, isRemoved, i
          </div>
 
          <div className={cn('price')}>
-            <h4 className={cn('old-price')}>{currencyFormater.format(gia_sp)}</h4>
+            {km > 0 ? <h4 className={cn('old-price')}>{currencyFormater.format(gia_sp)}</h4> : <></>}
 
-            <h4 className={cn('current-price')}>{currencyFormater.format(gia_sp)}</h4>
+            <h4 className={cn('current-price')}>{currencyFormater.format(gia_sp - (gia_sp * km) / 100)}</h4>
          </div>
 
          <div className={cn('product-amount')}>
@@ -97,7 +97,7 @@ function CartItem({ gh_id, ma_sp, image, ten_sp, sl_sp, gia_sp, km, isRemoved, i
             </div>
          </div>
 
-         <h4 className={cn('product-prices')}>{currencyFormater.format(sl_sp * gia_sp)}</h4>
+         <h4 className={cn('product-prices')}>{currencyFormater.format(sl_sp * (gia_sp - (gia_sp * km) / 100))}</h4>
 
          <div className={cn('product-edit')}>
             <IconButton onClick={() => handleRemove()}>

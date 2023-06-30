@@ -134,6 +134,7 @@ function Home() {
                                        img={product.sp_image}
                                        ten={product.sp_ten}
                                        gia={product.sp_gia}
+                                       km={product.sp_khuyenmai}
                                     />
                                  </SwiperSlide>
                               );

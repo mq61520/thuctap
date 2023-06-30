@@ -94,6 +94,7 @@ function Cart() {
                   </div>
                   <div className={cn('product-list')}>
                      {products.map((prod) => {
+                        const newPrice = prod.info.sp_gia - (prod.info.sp_gia * prod.info.sp_khuyenmai) / 100;
                         return (
                            <CartItem
                               key={prod.info.sp_id}
@@ -103,7 +104,7 @@ function Cart() {
                               image={prod.info.sp_image}
                               sl_sp={prod.amount}
                               gia_sp={prod.info.sp_gia}
-                              // km={p.promotion}
+                              km={prod.info.sp_khuyenmai}
                               isChecked={(status) => {
                                  if (status == true) {
                                     const action = addToList({
@@ -112,14 +113,16 @@ function Cart() {
                                        anh_sp: prod.info.sp_image,
                                        sl_sp: prod.amount,
                                        gia_sp: prod.info.sp_gia,
-                                       thanh_tien: prod.info.sp_gia * prod.amount,
+                                       km: prod.info.sp_khuyenmai,
+                                       gia_km: newPrice,
+                                       thanh_tien: prod.amount * newPrice,
                                     });
                                     dispatch(action);
 
                                     const update_location = setLocation('FromCart');
                                     dispatch(update_location);
 
-                                    setTotal(total + prod.info.sp_gia * prod.amount);
+                                    setTotal(total + prod.amount * newPrice);
                                     setChecked(checked + 1);
                                  } else {
                                     const action = removeFromList({
@@ -127,7 +130,7 @@ function Cart() {
                                     });
                                     dispatch(action);
 
-                                    setTotal(total - prod.info.sp_gia * prod.amount);
+                                    setTotal(total - newPrice * prod.amount);
                                     setChecked(checked - 1);
                                  }
                               }}

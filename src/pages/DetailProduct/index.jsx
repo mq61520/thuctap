@@ -205,17 +205,19 @@ function DetailProduct() {
                   </div>
 
                   <div className={cn('flex-product-price')}>
-                     {prodInfo.sp_khuyenmai != null ? (
+                     {prodInfo.sp_khuyenmai > 0 ? (
                         <h2 className={cn('product-discount')}>{currencyFormater.format(prodInfo.sp_gia)}</h2>
                      ) : (
                         <></>
                      )}
 
-                     <h2 className={cn('product-price')}>{currencyFormater.format(prodInfo.sp_gia)}</h2>
+                     <h2 className={cn('product-price')}>
+                        {currencyFormater.format(prodInfo.sp_gia - (prodInfo.sp_gia * prodInfo.sp_khuyenmai) / 100)}
+                     </h2>
 
-                     {prodInfo.sp_khuyenmai != null ? (
+                     {prodInfo.sp_khuyenmai > 0 ? (
                         <div className={cn('discount-flag')}>
-                           <span>-20%</span>
+                           <span>-{prodInfo.sp_khuyenmai}%</span>
                         </div>
                      ) : (
                         <></>

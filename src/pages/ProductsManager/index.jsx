@@ -74,10 +74,6 @@ function ProductsManager() {
    const [openModalPromotion, setOpenModalPromotion] = useState(false);
    const handleOpenPromotion = () => setOpenModalPromotion(true);
    const handleClosePromotion = () => setOpenModalPromotion(false);
-   //state of modal ProdPromotion
-   const [openModalProdPromotion, setOpenModalProdPromotion] = useState(false);
-   const handleOpenProdPromotion = () => setOpenModalProdPromotion(true);
-   const handleCloseProdPromotion = () => setOpenModalProdPromotion(false);
 
    const [listProd, setListProd] = useState([]);
 
@@ -236,7 +232,6 @@ function ProductsManager() {
          console.log(error);
       }
    };
-
    const [promotionList, setPromotionList] = useState([]);
    const handleGetPromotionList = async () => {
       const promotion_list_response = await axios.get('http://localhost:4000/promotion/all');
@@ -245,9 +240,47 @@ function ProductsManager() {
          setPromotionList(promotion_list_response.data);
       }
    };
+   const handleUpdatePromotion = async (ma_sp, value, ngaybatdau, ngayketthuc) => {
+      try {
+         const update_promotion_res = await axios.post('http://localhost:4000/product/promotion/update', {
+            ma_sp: ma_sp,
+            value: value,
+            batdau: ngaybatdau,
+            ketthuc: ngayketthuc,
+         });
+
+         if (update_promotion_res.data === 'UpdatePromotionSuccess') {
+            handleGetProductList();
+            toast.success(`Áp dụng thành công.`, { position: 'top-center' });
+         } else {
+            toast.error(`Lỗi.`, { position: 'top-center' });
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
 
    var stt = 0;
+   const date = new Date();
+   const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+   const month = date.getMonth() + 1;
+   const today = day + '-' + month + '-' + date.getFullYear();
+
+   const equalsDate = (d1, d2) => {
+      const date1 = new Date(d1);
+      const date2 = new Date(d2);
+
+      if (date1.getTime() > date2.getTime()) {
+         console.log(`${d1} is greater than ${d2} in terms of milliseconds`);
+      } else if (date1.getYear() < date2.getYear()) {
+         console.log(`${d2} is greater than ${d1} in terms of years`);
+      } else if (date1.getDate() === date2.getDate()) {
+         console.log(`Both dates are equal`);
+      }
+   };
+
    useEffect(() => {
+      equalsDate('20/06/2023', '21/05/2023');
       handleGetProductList();
       handleGetBrand();
       handleGetPromotionList();
@@ -546,9 +579,23 @@ function ProductsManager() {
                               <h4 className={cn('product-name')}>{product.sp_ten}</h4>
                            </div>
                            <div className={cn('product-price')}>
-                              <h4 className={cn('product-price-curent')}>{currencyFormater.format(product.sp_gia)}</h4>
-                              <h4 className={cn('product-promotion')}>(-20%)</h4>
-                              <h4 className={cn('product-price-old')}>{currencyFormater.format(product.sp_gia)}</h4>
+                              {product.sp_khuyenmai == null ? (
+                                 <h4 className={cn('product-price-current')}>
+                                    {currencyFormater.format(product.sp_gia)}
+                                 </h4>
+                              ) : (
+                                 <>
+                                    <h4 className={cn('product-price-current')}>
+                                       {currencyFormater.format(
+                                          product.sp_gia - (product.sp_gia * product.sp_khuyenmai) / 100,
+                                       )}
+                                    </h4>
+                                    <h4 className={cn('product-promotion')}>({product.sp_khuyenmai}%)</h4>
+                                    <h4 className={cn('product-price-old')}>
+                                       {currencyFormater.format(product.sp_gia)}
+                                    </h4>
+                                 </>
+                              )}
                            </div>
                            <h4 className={cn('product-instock')}>{product.sp_tonkho}</h4>
 
@@ -562,6 +609,7 @@ function ProductsManager() {
                                        <div className={cn('tippy-promotion')}>
                                           <div className={cn('promotion-list')}>
                                              <h4>Danh sách khuyến mãi hiện có.</h4>
+
                                              {promotionList.length > 0 ? (
                                                 promotionList.map((promotion) => {
                                                    return (
@@ -571,13 +619,25 @@ function ProductsManager() {
                                                          </h4>
                                                          <div className={cn('promotion-date')}>
                                                             <p className={cn('promotion-date-item')}>
-                                                               <i>Bđầu:</i> {promotion.ngaybatdau}
+                                                               <i>Bđầu:</i> {promotion.ngaybatdau.slice(0, 10)}
                                                             </p>
                                                             <p className={cn('promotion-date-item')}>
-                                                               <i>Kthúc:</i> {promotion.ngayketthuc}
+                                                               <i>Kthúc:</i> {promotion.ngayketthuc.slice(0, 10)}
                                                             </p>
                                                          </div>
-                                                         <Button variant="outlined" sx={{ color: 'var(--mainColor4)' }}>
+                                                         <Button
+                                                            variant="outlined"
+                                                            sx={{ color: 'var(--mainColor4)' }}
+                                                            onClick={() => {
+                                                               handleUpdatePromotion(
+                                                                  product.sp_ma,
+                                                                  promotion.km_giatri,
+                                                                  promotion.ngaybatdau,
+                                                                  promotion.ngayketthuc,
+                                                               );
+                                                               // handleGetProductList();
+                                                            }}
+                                                         >
                                                             Áp dụng
                                                          </Button>
                                                       </div>

@@ -7,7 +7,7 @@ import currencyFormater from '../../common/formatCurrency';
 
 const cn = classNames.bind(styles);
 
-function ProductItem({ ma_sp, img, ten, gia, sale, ep }) {
+function ProductItem({ ma_sp, img, ten, gia, km, ep }) {
    return (
       <div className={cn('product-item')}>
          <Link to={'/product-detail/' + ma_sp}>
@@ -19,8 +19,8 @@ function ProductItem({ ma_sp, img, ten, gia, sale, ep }) {
                <h4 className={cn('product-name')}>{ten}</h4>
 
                <div className={cn('product-price')}>
-                  <h4 className={cn('current-price')}>{currencyFormater.format(gia)}</h4>
-                  {sale > 0 ? <h4 className={cn('old-price')}>{currencyFormater.format(gia)}</h4> : <></>}
+                  <h4 className={cn('current-price')}>{currencyFormater.format(gia - (gia * km) / 100)}</h4>
+                  {km > 0 ? <h4 className={cn('old-price')}>{currencyFormater.format(gia)}</h4> : <></>}
                </div>
 
                {/* <div className={cn('product-rating')}>
@@ -31,9 +31,9 @@ function ProductItem({ ma_sp, img, ten, gia, sale, ep }) {
 
                {/* <span className={cn('product-episode')}>Tập 100</span> */}
 
-               {sale > 0 ? (
+               {km > 0 ? (
                   <h4 className={cn('sale-flag')}>
-                     <span>100%</span>
+                     <span>{km}%</span>
                      <span>giảm</span>
                   </h4>
                ) : (

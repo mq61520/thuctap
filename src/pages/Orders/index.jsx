@@ -45,11 +45,12 @@ function Orders() {
       }
    };
 
-   const handleCancelOrder = async (dh_id) => {
+   const handleCancelOrder = async (dh_id, list) => {
       try {
-         const cancel_res = await axios.get('http://localhost:4000/order/cancel/' + dh_id);
+         const cancel_res = await axios.post('http://localhost:4000/order/cancel', { dh_id: dh_id, list_prod: list });
          if (cancel_res.data === 'UpdateStatusSuccess') {
             toast.success('Hủy đơn hàng thành công.', { position: 'top-center' });
+            handleGetOrders();
          } else {
             toast.error('Lỗi.', { position: 'top-center' });
          }
@@ -118,8 +119,8 @@ function Orders() {
                                  <Button
                                     variant="outlined"
                                     onClick={() => {
-                                       handleCancelOrder(order.order_info.dh_ma);
-                                       handleGetOrders();
+                                       handleCancelOrder(order.order_info.dh_ma, order.list_prod);
+                                       // handleGetOrders();
                                     }}
                                  >
                                     Hủy đơn
