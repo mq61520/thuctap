@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { toast } from 'react-toastify';
+import ReactToPrint from 'react-to-print';
 
 //mui
 import Modal from '@mui/material/Modal';
@@ -18,6 +19,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
+import LocalPrintshopRoundedIcon from '@mui/icons-material/LocalPrintshopRounded';
 import CloseIcon from '@mui/icons-material/Close';
 
 //paypal api
@@ -27,6 +29,8 @@ import styles from './Payment.module.scss';
 import currencyFormater from '../../common/formatCurrency';
 import { setPayList } from '../../app/slices/paySlice';
 import { changeAmount } from '../../app/slices/cartSlice';
+import Bill from './OrderBill';
+import { SearchTwoTone } from '@mui/icons-material';
 
 const cn = classNames.bind(styles);
 
@@ -64,7 +68,7 @@ function Payment() {
    //selected list product
    const listProd = useSelector((state) => state.pay);
    const dispatch = useDispatch();
-   console.log(listProd.listProd);
+   console.log(listProd);
 
    //get user info
    const [userInfo, setUserInfo] = useState('');
@@ -162,6 +166,10 @@ function Payment() {
       }
    };
 
+   //react-to-print
+   let componentRef = useRef();
+
+   //
    var total = 0;
 
    useEffect(() => {
@@ -405,7 +413,7 @@ function Payment() {
                      <div className={cn('submit-pay-btn')}>
                         <Button
                            variant="contained"
-                           sx={{ width: '180px', height: '44px', fontSize: 24 }}
+                           sx={{ width: '180px', height: '44px', fontSize: 20, fontWeight: 400 }}
                            onClick={handleOrder}
                         >
                            Đặt hàng
@@ -417,11 +425,35 @@ function Payment() {
                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '50px' }}>
                   <h1>Đặt hàng thành công</h1>
 
+                  <ReactToPrint
+                     trigger={() => {
+                        return (
+                           <Button
+                              startIcon={<LocalPrintshopRoundedIcon />}
+                              variant="outlined"
+                              sx={{ fontSize: 18, fontWeight: 400 }}
+                           >
+                              In hóa đơn
+                           </Button>
+                        );
+                     }}
+                     content={() => componentRef.current}
+                  />
+
                   <Link to={'/'}>
                      <Button variant="outlined" sx={{ height: '44px', fontSize: 20 }}>
                         Tiếp tục mua hàng
                      </Button>
                   </Link>
+
+                  <div
+                     className={cn('print-preview')}
+                     ref={(el) => {
+                        componentRef.current = el;
+                     }}
+                  >
+                     <Bill list_prod={listProd.listProd} user_info={userInfo} total={total} ship={shipType} />
+                  </div>
                </div>
             )}
          </div>
