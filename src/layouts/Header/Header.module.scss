@@ -120,6 +120,12 @@ header {
          }
       }
 
+      & .list-brand {
+         display: grid;
+         grid-template-columns: 1fr 1fr 1fr;
+         gap: 6px;
+      }
+
       & .right-features {
          & .actions {
             display: flex;

@@ -23,6 +23,7 @@ import styles from './Header.module.scss';
 import Popper from '../../components/Popper';
 import SearchItem from '../../components/SearchItem';
 import { changeAmount } from '../../app/slices/cartSlice';
+import { addList, setList } from '../../app/slices/productSlice';
 
 const cn = classNames.bind(styles);
 
@@ -34,6 +35,7 @@ function Header() {
    const buttonStyle = { fontSize: '18px', color: '#333' };
 
    const cart = useSelector((state) => state.cart);
+   const product = useSelector((state) => state.product);
    const dispatch = useDispatch();
 
    const handleGetCartAmount = async () => {
@@ -56,8 +58,45 @@ function Header() {
       }
    };
 
+   const [brands, setBrands] = useState([]);
+   const handleGetBrand = async () => {
+      try {
+         const brand_list = await axios.get('http://localhost:4000/brands');
+
+         if (brand_list.data.length > 0) {
+            setBrands(brand_list.data);
+            console.log(brand_list.data);
+         } else {
+            console.log('Lỗi');
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
+   const handleToAllProductOfBrand = async (brand) => {
+      const setListEmpty = setList();
+      dispatch(setListEmpty);
+
+      try {
+         const brand_list = await axios.get('http://localhost:4000/product/brand/' + brand);
+
+         if (brand_list.data.length > 0) {
+            console.log(brand_list.data);
+
+            const setList_action = addList(brand_list.data);
+            dispatch(setList_action);
+         } else {
+            console.log('Lỗi');
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
    useEffect(() => {
       handleGetCartAmount();
+      handleGetBrand();
    }, []);
 
    return (
@@ -74,7 +113,40 @@ function Header() {
                <Link to={'/'}>
                   <div className={cn('nav-item')}>Trang chủ</div>
                </Link>
-               <div className={cn('nav-item')}>Danh mục</div>
+
+               <Tippy
+                  interactive
+                  render={(attrs) => (
+                     <div className={cn('content')} tabIndex="-1" {...attrs}>
+                        <Popper>
+                           <div className={cn('list-brand')}>
+                              {brands.length > 0 ? (
+                                 brands.map((brand) => {
+                                    return (
+                                       <Link to={'/products/brand/' + brand.dm_ten} key={brand.dm_id}>
+                                          <Button
+                                             variant="text"
+                                             sx={{ fontSize: 20, fontWeight: 400 }}
+                                             style={buttonStyle}
+                                          >
+                                             {brand.dm_ten}
+                                          </Button>
+                                       </Link>
+                                    );
+                                 })
+                              ) : (
+                                 <></>
+                              )}
+                           </div>
+                        </Popper>
+                     </div>
+                  )}
+               >
+                  <Link to={'products/brand/all'}>
+                     <div className={cn('nav-item')}>Danh mục</div>
+                  </Link>
+               </Tippy>
+
                <Link to={'/products'}>
                   <div className={cn('nav-item')}>Sản phẩm</div>
                </Link>

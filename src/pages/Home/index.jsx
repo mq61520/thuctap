@@ -157,7 +157,7 @@ function Home() {
 
                <div className={cn('category-list')}>
                   <Swiper
-                     slidesPerView={8}
+                     slidesPerView={9}
                      spaceBetween={5}
                      pagination={{ clickable: true, enabled: false }}
                      navigation={true}

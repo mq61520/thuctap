@@ -1,6 +1,14 @@
-import './OrderBill.css';
+import { useSelector } from 'react-redux';
 
-function Bill({ list_prod, user_info, total, ship }) {
+import './OrderBill.css';
+import currencyFormater from '../../common/formatCurrency';
+
+function Bill({ user_info, ship }) {
+   const listProd = useSelector((state) => state.pay);
+   console.log(user_info);
+
+   const date = new Date();
+
    return (
       <table className="body-wrap">
          <tbody>
@@ -25,20 +33,51 @@ function Bill({ list_prod, user_info, total, ship }) {
                                                 <tbody>
                                                    <tr>
                                                       <td>
+                                                         {user_info.nd_hoten}
+                                                         <br></br>
+                                                         {date.toLocaleDateString()}
+                                                      </td>
+                                                   </tr>
+                                                   <tr>
+                                                      <td>
                                                          <table
                                                             className="invoice-items"
                                                             cellPadding="0"
                                                             cellSpacing="0"
                                                          >
                                                             <tbody>
-                                                               {list_prod.map((product) => {
-                                                                  return (
-                                                                     <tr key={product.ma_sp}>
-                                                                        <td>{product.sp_ten}</td>
-                                                                        <td className="alignright">{}</td>
-                                                                     </tr>
-                                                                  );
-                                                               })}
+                                                               {listProd.listProd.length > 0 ? (
+                                                                  listProd.listProd.map((product) => {
+                                                                     return (
+                                                                        <tr key={product.ma_sp}>
+                                                                           <td>{product.ten_sp}</td>
+                                                                           <td className="alignright">
+                                                                              {currencyFormater.format(
+                                                                                 product.gia_km * product.sl_sp,
+                                                                              )}
+                                                                           </td>
+                                                                        </tr>
+                                                                     );
+                                                                  })
+                                                               ) : (
+                                                                  <></>
+                                                               )}
+                                                               <tr>
+                                                                  <td className="alignright" width="80%">
+                                                                     Phí vận chuyển:
+                                                                  </td>
+                                                                  <td className="alignright">
+                                                                     {currencyFormater.format(ship)}
+                                                                  </td>
+                                                               </tr>
+                                                               <tr className="total">
+                                                                  <td className="alignright" width="80%">
+                                                                     Tổng cộng:
+                                                                  </td>
+                                                                  <td className="alignright">
+                                                                     {currencyFormater.format(listProd.total + ship)}
+                                                                  </td>
+                                                               </tr>
                                                             </tbody>
                                                          </table>
                                                       </td>

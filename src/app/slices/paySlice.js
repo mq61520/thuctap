@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
    name: 'checkout',
-   initialState: { listProd: [], location: '' },
+   initialState: { listProd: [], location: '', total: 0 },
    reducers: {
       setPayList: (state, action) => {
          state.listProd = [];
@@ -16,9 +16,12 @@ const authSlice = createSlice({
       setLocation: (state, action) => {
          state.location = action.payload;
       },
+      setTotal: (state, action) => {
+         state.total = action.payload;
+      },
    },
 });
 
 const { actions, reducer } = authSlice;
-export const { setPayList, addToList, removeFromList, setLocation } = actions;
+export const { setPayList, addToList, removeFromList, setLocation, setTotal } = actions;
 export default reducer;

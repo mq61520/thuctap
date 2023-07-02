@@ -5,13 +5,13 @@ const productSlice = createSlice({
    initialState: { prodList: [] },
    reducers: {
       setList: (state, action) => {
-         state.listProd = [];
+         state.prodList = [];
       },
       addList: (state, action) => {
-         state.listProd.push(action.payload);
+         state.prodList.concat(action.payload);
       },
       removeList: (state, action) => {
-         state.listProd = state.listProd.filter((i) => i.ma_sp !== action.payload.ma_sp);
+         state.prodList = state.prodList.filter((i) => i.ma_sp !== action.payload.ma_sp);
       },
    },
 });

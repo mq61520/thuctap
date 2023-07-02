@@ -27,7 +27,7 @@ import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 import styles from './Payment.module.scss';
 import currencyFormater from '../../common/formatCurrency';
-import { setPayList } from '../../app/slices/paySlice';
+import { setPayList, setTotal } from '../../app/slices/paySlice';
 import { changeAmount } from '../../app/slices/cartSlice';
 import Bill from './OrderBill';
 import { SearchTwoTone } from '@mui/icons-material';
@@ -142,8 +142,12 @@ function Payment() {
                });
 
                if (order_res.data === 'InsertSuccess') {
-                  const reset_listpay_action = setPayList();
-                  dispatch(reset_listpay_action);
+                  // const reset_listpay_action = setPayList();
+                  // dispatch(reset_listpay_action);
+
+                  //set total in global state
+                  const set_total_action = setTotal(total);
+                  dispatch(set_total_action);
                   toast.success('Đặt hàng thành công!', { position: 'top-center' });
 
                   if (location.location === 'FromCart') {
@@ -425,13 +429,26 @@ function Payment() {
                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '50px' }}>
                   <h1>Đặt hàng thành công</h1>
 
+                  <Link to={'/'}>
+                     <Button
+                        variant="outlined"
+                        sx={{ height: '44px', fontSize: 20 }}
+                        onClick={() => {
+                           const reset_listpay_action = setPayList();
+                           dispatch(reset_listpay_action);
+                        }}
+                     >
+                        Tiếp tục mua hàng
+                     </Button>
+                  </Link>
+
                   <ReactToPrint
                      trigger={() => {
                         return (
                            <Button
                               startIcon={<LocalPrintshopRoundedIcon />}
                               variant="outlined"
-                              sx={{ fontSize: 18, fontWeight: 400 }}
+                              sx={{ fontSize: 18, fontWeight: 400, mt: 2 }}
                            >
                               In hóa đơn
                            </Button>
@@ -440,19 +457,15 @@ function Payment() {
                      content={() => componentRef.current}
                   />
 
-                  <Link to={'/'}>
-                     <Button variant="outlined" sx={{ height: '44px', fontSize: 20 }}>
-                        Tiếp tục mua hàng
-                     </Button>
-                  </Link>
-
-                  <div
-                     className={cn('print-preview')}
-                     ref={(el) => {
-                        componentRef.current = el;
-                     }}
-                  >
-                     <Bill list_prod={listProd.listProd} user_info={userInfo} total={total} ship={shipType} />
+                  <div style={{ display: 'none' }}>
+                     <div
+                        className={cn('print-preview')}
+                        ref={(el) => {
+                           componentRef.current = el;
+                        }}
+                     >
+                        <Bill user_info={userInfo} ship={shipType} />
+                     </div>
                   </div>
                </div>
             )}
