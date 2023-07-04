@@ -142,7 +142,7 @@ function Header() {
                      </div>
                   )}
                >
-                  <Link to={'products/brand/all'}>
+                  <Link to={'/products/brand/all'}>
                      <div className={cn('nav-item')}>Danh mục</div>
                   </Link>
                </Tippy>

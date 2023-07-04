@@ -118,13 +118,17 @@ function DetailProduct() {
       dispatch(action);
 
       if (is_logged === '1') {
+         const newPrice = prodInfo.sp_gia - (prodInfo.sp_gia * prodInfo.sp_khuyenmai) / 100;
+
          const action = addToList({
             ma_sp: prodInfo.sp_ma,
             ten_sp: prodInfo.sp_ten,
             anh_sp: prodInfo.sp_image,
             sl_sp: amount,
             gia_sp: prodInfo.sp_gia,
-            thanh_tien: prodInfo.sp_gia * amount,
+            km: prodInfo.sp_khuyenmai,
+            gia_km: newPrice,
+            thanh_tien: newPrice * amount,
          });
          dispatch(action);
 
@@ -199,10 +203,12 @@ function DetailProduct() {
                <div className={cn('right-side')}>
                   <h2 className={cn('product-name')}>{prodInfo.sp_ten}</h2>
 
-                  <div className={cn('product-vote')}>
+                  <p className={cn('product-brand')}>Danh mục: {prodInfo.sp_danhmuc}</p>
+
+                  {/* <div className={cn('product-vote')}>
                      <Rating value={4} readOnly />
                      <span>(4.5)</span>
-                  </div>
+                  </div> */}
 
                   <div className={cn('flex-product-price')}>
                      {prodInfo.sp_khuyenmai > 0 ? (
@@ -229,7 +235,7 @@ function DetailProduct() {
                         <RemoveIcon
                            sx={{ cursor: 'pointer' }}
                            onClick={() => {
-                              if (amount > 0) {
+                              if (amount > 1) {
                                  setAmount(amount - 1);
                               } else {
                                  return;

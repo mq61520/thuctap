@@ -64,6 +64,11 @@
                padding-bottom: 25px;
             }
 
+            .product-brand {
+               font-weight: 400;
+               padding-bottom: 25px;
+            }
+
             & .product-vote {
                display: flex;
                align-items: center;
@@ -77,27 +82,27 @@
 
             & .flex-product-price {
                display: flex;
-               align-items: center;
+               align-items: flex-end;
                margin-bottom: 40px;
                padding: 12px;
                background-color: var(--mainColor6);
 
                & .product-discount {
                   font-size: 18px;
-                  color: #777;
+                  font-weight: 400;
+                  color: #999;
                   text-decoration: line-through;
                   margin-right: 10px;
-                  font-weight: 500;
                }
 
                & .product-price {
                   color: var(--mainColor4);
-                  font-size: 32px;
+                  font-size: 30px;
                   font-weight: 400;
                }
 
                & .discount-flag {
-                  margin-left: 20px;
+                  margin-left: 30px;
                   background-color: red;
                   padding: 2px 8px;
                   color: white;
