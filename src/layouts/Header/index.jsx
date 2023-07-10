@@ -123,15 +123,20 @@ function Header() {
                               {brands.length > 0 ? (
                                  brands.map((brand) => {
                                     return (
-                                       <Link to={'/products/brand/' + brand.dm_ten} key={brand.dm_id}>
-                                          <Button
-                                             variant="text"
-                                             sx={{ fontSize: 20, fontWeight: 400 }}
-                                             style={buttonStyle}
-                                          >
-                                             {brand.dm_ten}
-                                          </Button>
-                                       </Link>
+                                       <Button
+                                          key={brand.dm_id}
+                                          variant="text"
+                                          sx={{ fontSize: 20, fontWeight: 400 }}
+                                          style={buttonStyle}
+                                          onClick={() => {
+                                             window.open(
+                                                'http://127.0.0.1:5173/products/brand/' + brand.dm_ten,
+                                                '_self',
+                                             );
+                                          }}
+                                       >
+                                          {brand.dm_ten}
+                                       </Button>
                                     );
                                  })
                               ) : (

@@ -58,7 +58,7 @@ function Payment() {
    };
 
    //payment method
-   const [payMethod, setPayMethod] = useState({ method: '', status: false });
+   const [payMethod, setPayMethod] = useState({ method: 'COD', status: false });
 
    //paypal options
    const paypalOptions = {
@@ -78,10 +78,12 @@ function Payment() {
             'http://localhost:4000/account/get/' + localStorage.getItem('user_id'),
          );
 
+         console.log(user_info_response.data);
+
          if (user_info_response.data) {
-            setUserInfo(user_info_response.data[0]);
             setPhone(user_info_response.data[0].nd_phonenumber);
             setAddress(user_info_response.data[0].nd_address);
+            setUserInfo(user_info_response.data[0]);
          }
       } catch (err) {
          console.log(err);
@@ -123,8 +125,9 @@ function Payment() {
    //&& payMethod.status === 'Paid'
    const handleOrder = async () => {
       try {
-         if (address.length <= 0 && phone.length <= 0) {
+         if (address.length <= 0 || phone.length <= 0 || address === 'undefined' || phone === 'undefined') {
             toast.warn('Cập nhật địa chỉ và số điện thoại.', { position: 'top-center' });
+            return;
          } else {
             if (payMethod.method !== 'Paypal' || payMethod.method !== 'COD') {
                const order_res = await axios.post('http://localhost:4000/order/add', {
@@ -355,18 +358,24 @@ function Payment() {
                            name="controlled-radio-buttons-group"
                            value={payMethod}
                            onChange={(e) => {
-                              setPayMethod(e.target.value);
+                              setPayMethod({ ...payMethod, method: e.target.value });
                            }}
                         >
                            <FormControlLabel
+                              checked={payMethod.method === 'COD'}
                               value="COD"
                               control={<Radio />}
                               label="COD (Thanh toán trực tiếp khi nhận hàng)"
                            />
-                           <FormControlLabel value="Paypal" control={<Radio />} label="Paypal" />
+                           <FormControlLabel
+                              checked={payMethod.method === 'Paypal'}
+                              value="Paypal"
+                              control={<Radio />}
+                              label="Paypal"
+                           />
                         </RadioGroup>
 
-                        {payMethod === 'Paypal' ? (
+                        {payMethod.method === 'Paypal' ? (
                            <div className={cn('paypal-api')}>
                               <PayPalScriptProvider options={paypalOptions}>
                                  <PayPalButtons

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 //mui
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -55,12 +56,12 @@ function ProductsManager() {
       boxShadow: 24,
       padding: '20px',
    };
-   const styleModalProdPromotion = {
+   const styleModalEdit = {
       position: 'absolute',
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      width: 'fit-content',
+      width: '1056px',
       backgroundColor: 'white',
       borderRadius: '8px',
       boxShadow: 24,
@@ -74,6 +75,10 @@ function ProductsManager() {
    const [openModalPromotion, setOpenModalPromotion] = useState(false);
    const handleOpenPromotion = () => setOpenModalPromotion(true);
    const handleClosePromotion = () => setOpenModalPromotion(false);
+   //state of modal edit
+   const [openModalEdit, setOpenModalEdit] = useState(false);
+   const handleOpenModalEdit = () => setOpenModalEdit(true);
+   const handleCloseModalEdit = () => setOpenModalEdit(false);
 
    const [listProd, setListProd] = useState([]);
 
@@ -196,6 +201,67 @@ function ProductsManager() {
       }
    };
 
+   const [productEdit, setProductEdit] = useState({});
+   const [prodNameUpdate, setProdNameUpdate] = useState('');
+   const [prodPriceUpdate, setProdPriceUpdate] = useState('');
+   const [brandUpdate, setBrandUpdate] = useState(1);
+   const [prodDescUpdate, setProdDescUpdate] = useState('');
+   const [imgSpUpdate, setImgSpUpdate] = useState([]);
+   const handleUpdateProduct = async () => {
+      try {
+         const add_product_res = await axios.post('http://localhost:4000/product/update', {
+            ma_sp: productEdit.ma,
+            anh_sp: imgSpUpdate[0].name.length > 0 ? imgSpUpdate[0].name : productEdit.anh,
+            ten: prodNameUpdate,
+            gia: prodPriceUpdate,
+            danhmuc: brandUpdate === 1 ? productEdit.dm : brandUpdate,
+            mota: prodDescUpdate,
+         });
+         // console.log(add_product_res);
+
+         var add_images_res;
+         var add_images_res_update = '';
+         if (imgSpUpdate.length > 0) {
+            for (let i = 0; i < imgSpUpdate.length; i++) {
+               const postData = new FormData();
+               postData.append('product_images', imgSpUpdate[i]);
+               postData.append('ma_sp', productEdit.ma);
+
+               add_images_res = await axios({
+                  method: 'POST',
+                  url: 'http://localhost:4000/product/update/images',
+                  data: postData,
+                  headers: {
+                     'Content-Type': 'multipart/form-data',
+                  },
+               });
+            }
+            add_images_res_update = add_images_res.data;
+         } else {
+            add_images_res_update = 'UpdateImgSuccess';
+         }
+
+         console.log('product response:' + add_product_res.data);
+         console.log('image response:' + add_images_res.data);
+
+         if (add_product_res.data === 'UpdateProductSuccess' && add_images_res_update === 'UpdateImgSuccess') {
+            console.log('Cập nhật thành công.');
+            toast.success('Cập nhật thành công.', { position: 'top-center' });
+
+            setProductEdit({});
+            setImgSp([]);
+            handleCloseModalEdit();
+
+            handleGetProductList();
+         } else {
+            console.log('Cập nhật lỗi.');
+            toast.error('Cập nhật lỗi.', { position: 'top-center' });
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
    const [brands, setBrands] = useState([]);
    const handleGetBrand = async () => {
       try {
@@ -261,36 +327,226 @@ function ProductsManager() {
    };
 
    var stt = 0;
-   const date = new Date();
-   const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-   const month = date.getMonth() + 1;
-   const today = day + '-' + month + '-' + date.getFullYear();
-
-   const equalsDate = (d1, d2) => {
-      const date1 = new Date(d1);
-      const date2 = new Date(d2);
-
-      if (date1.getTime() > date2.getTime()) {
-         console.log(`${d1} is greater than ${d2} in terms of milliseconds`);
-      } else if (date1.getYear() < date2.getYear()) {
-         console.log(`${d2} is greater than ${d1} in terms of years`);
-      } else if (date1.getDate() === date2.getDate()) {
-         console.log(`Both dates are equal`);
-      }
-   };
 
    useEffect(() => {
-      equalsDate('20/06/2023', '21/05/2023');
       handleGetProductList();
       handleGetBrand();
       handleGetPromotionList();
    }, []);
+
+   console.log(productEdit);
 
    return (
       <div className={cn('body')}>
          <h4 className={cn('content-title')}>Quản lý sản phẩm</h4>
 
          <div className={cn('product-crud')}>
+            <div className={cn('crud-btn')}>
+               {Object.keys(productEdit).length > 0 ? (
+                  <Button
+                     variant="contained"
+                     startIcon={<AddIcon sx={{ width: '30px', height: '30px' }} />}
+                     sx={{
+                        width: 'fit-content',
+                        height: '42px',
+                        fontSize: '20px',
+                        backgroundColor: 'var(--mainColor4)',
+                     }}
+                     onClick={handleOpenModalEdit}
+                  >
+                     Chỉnh sửa
+                  </Button>
+               ) : (
+                  <Button
+                     disabled
+                     variant="contained"
+                     startIcon={<AddIcon sx={{ width: '30px', height: '30px' }} />}
+                     sx={{
+                        width: 'fit-content',
+                        height: '42px',
+                        fontSize: '20px',
+                        backgroundColor: 'var(--mainColor4)',
+                     }}
+                     onClick={handleOpenModalEdit}
+                  >
+                     Chỉnh sửa
+                  </Button>
+               )}
+
+               <Modal open={openModalEdit} onClose={handleCloseModalEdit}>
+                  <div className={cn('change-address-modal-container')} style={styleModalEdit}>
+                     <div
+                        className={cn('modal-header')}
+                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                     >
+                        <h4 style={{ fontSize: 24, fontWeight: 400, color: '#333' }}>Chỉnh sửa sản phẩm</h4>
+
+                        <IconButton
+                           onClick={() => {
+                              handleCloseModalEdit();
+                              setProductEdit({});
+                           }}
+                        >
+                           <CloseIcon />
+                        </IconButton>
+                     </div>
+
+                     <div
+                        className={cn('modal-body')}
+                        style={{ display: 'flex', justifyContent: 'space-between', marginTop: 26 }}
+                     >
+                        <div className={cn('left-side')} style={{ width: '500px' }}>
+                           <TextField
+                              disabled
+                              label="Mã sản phẩm"
+                              fullWidth
+                              size="large"
+                              margin="normal"
+                              value={productEdit.ma}
+                           />
+                           <TextField
+                              label="Tên sản phẩm"
+                              fullWidth
+                              multiline
+                              size="large"
+                              margin="normal"
+                              value={prodNameUpdate}
+                              onChange={(e) => {
+                                 setProdNameUpdate(e.target.value);
+                              }}
+                           />
+                           <TextField
+                              disabled
+                              type="number"
+                              label="Số lượng"
+                              fullWidth
+                              multiline
+                              size="large"
+                              margin="normal"
+                              value={productEdit.sl}
+                           />
+                           <TextField
+                              type="number"
+                              label="Giá"
+                              fullWidth
+                              multiline
+                              size="large"
+                              margin="normal"
+                              value={prodPriceUpdate}
+                              onChange={(e) => {
+                                 setProdPriceUpdate(e.target.value);
+                              }}
+                           />
+
+                           <Select
+                              value={brandUpdate}
+                              onChange={(e) => setBrandUpdate(e.target.value)}
+                              sx={{ width: 'fit-content', fontSize: 16, mt: 2, mb: 2 }}
+                           >
+                              <MenuItem disabled value={1} sx={{ fontSize: 16 }}>
+                                 -- Chọn danh mục --
+                              </MenuItem>
+
+                              {brands.length > 0 ? (
+                                 brands.map((brand) => {
+                                    return (
+                                       <MenuItem key={brand.dm_id} value={brand.dm_ten} sx={{ fontSize: 16 }}>
+                                          {brand.dm_ten}
+                                       </MenuItem>
+                                    );
+                                 })
+                              ) : (
+                                 <></>
+                              )}
+                           </Select>
+                        </div>
+                        <div className={cn('right-side')} style={{ width: '500px' }}>
+                           <TextField
+                              label="Mô tả sản phẩm"
+                              fullWidth
+                              multiline
+                              rows={5}
+                              size="large"
+                              margin="normal"
+                              value={prodDescUpdate}
+                              onChange={(e) => {
+                                 setProdDescUpdate(e.target.value);
+                              }}
+                           />
+
+                           <div className={cn('input-label')} style={{ marginRTop: '16px' }}>
+                              <Button variant="outlined">
+                                 <label style={{ marginRight: '6px' }}>
+                                    Cập nhật ảnh đại diện sản phẩm
+                                    <input
+                                       className={cn('input-img')}
+                                       type="file"
+                                       accept=".jpg, .jpeg, .png"
+                                       multiple
+                                       onChange={(e) => {
+                                          setImgSpUpdate(e.target.files);
+                                       }}
+                                       required
+                                       style={{ width: '0' }}
+                                    />
+                                 </label>
+                              </Button>
+                           </div>
+
+                           {imgSpUpdate.length > 0 ? (
+                              <div
+                                 className={cn('preview-img-list')}
+                                 style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: '95px 95px 95px 95px 95px',
+                                    gap: '5px',
+                                    marginTop: '5px',
+                                 }}
+                              >
+                                 {Array.from(imgSpUpdate).map((image) => {
+                                    return (
+                                       <img
+                                          key={image.name}
+                                          src={URL.createObjectURL(image)}
+                                          alt={image.name}
+                                          style={{ width: '95px', height: '95px', objectFit: 'cover' }}
+                                       />
+                                    );
+                                 })}
+                              </div>
+                           ) : (
+                              <></>
+                           )}
+                        </div>
+                     </div>
+
+                     <div
+                        className={cn('modal-footer')}
+                        style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 26 }}
+                     >
+                        <Button
+                           variant="outlined"
+                           sx={{ width: '120px', color: 'var(--mainColor4)', margin: '0 10px' }}
+                           onClick={() => {
+                              handleCloseModalEdit();
+                              setProductEdit({});
+                           }}
+                        >
+                           Đóng
+                        </Button>
+
+                        <Button
+                           variant="contained"
+                           sx={{ width: '120px', backgroundColor: 'var(--mainColor4)' }}
+                           onClick={handleUpdateProduct}
+                        >
+                           Cập nhật
+                        </Button>
+                     </div>
+                  </div>
+               </Modal>
+            </div>
+
             <div className={cn('crud-btn')}>
                <Button
                   variant="contained"
@@ -562,6 +818,7 @@ function ProductsManager() {
                <h4 className={cn('product-price')}>Giá</h4>
                <h4 className={cn('product-instock')}>Tồn kho</h4>
                <h4 className={cn('product-promotion')}>Khuyễn mãi</h4>
+               <h4 className={cn('product-edit')}>Sửa</h4>
                <h4 className={cn('product-del')}>Xóa</h4>
                <h4 className={cn('product-tool')}>Ẩn/hiện</h4>
             </div>
@@ -658,6 +915,27 @@ function ProductsManager() {
                                  </IconButton>
                               </h4>
                            </Tippy>
+
+                           <h4 className={cn('product-edit')}>
+                              <Checkbox
+                                 onChange={() => {
+                                    let newProd = {
+                                       id: product.sp_id,
+                                       ma: product.sp_ma,
+                                       ten: product.sp_ten,
+                                       sl: product.sp_tonkho,
+                                       gia: product.sp_gia,
+                                       dm: product.sp_danhmuc,
+                                       mota: product.sp_mota,
+                                       anh: product.sp_image,
+                                    };
+                                    setProdNameUpdate(product.sp_ten);
+                                    setProdPriceUpdate(product.sp_gia);
+                                    setProdDescUpdate(product.sp_mota);
+                                    setProductEdit(newProd);
+                                 }}
+                              />
+                           </h4>
 
                            <h4 className={cn('product-del')}>
                               <IconButton onClick={() => hanldeRemoveProduct(product.sp_ma)}>
