@@ -121,7 +121,7 @@ function Brand() {
                      );
                   })
                ) : (
-                  <></>
+                  <div>Chưa có sản phẩm</div>
                )}
             </div>
          </div>

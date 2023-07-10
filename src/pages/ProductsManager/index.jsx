@@ -341,7 +341,7 @@ function ProductsManager() {
          <h4 className={cn('content-title')}>Quản lý sản phẩm</h4>
 
          <div className={cn('product-crud')}>
-            <div className={cn('crud-btn')}>
+            {/* <div className={cn('crud-btn')}>
                {Object.keys(productEdit).length > 0 ? (
                   <Button
                      variant="contained"
@@ -545,7 +545,7 @@ function ProductsManager() {
                      </div>
                   </div>
                </Modal>
-            </div>
+            </div> */}
 
             <div className={cn('crud-btn')}>
                <Button
@@ -818,7 +818,7 @@ function ProductsManager() {
                <h4 className={cn('product-price')}>Giá</h4>
                <h4 className={cn('product-instock')}>Tồn kho</h4>
                <h4 className={cn('product-promotion')}>Khuyễn mãi</h4>
-               <h4 className={cn('product-edit')}>Sửa</h4>
+               {/* <h4 className={cn('product-edit')}>Sửa</h4> */}
                <h4 className={cn('product-del')}>Xóa</h4>
                <h4 className={cn('product-tool')}>Ẩn/hiện</h4>
             </div>
@@ -916,7 +916,7 @@ function ProductsManager() {
                               </h4>
                            </Tippy>
 
-                           <h4 className={cn('product-edit')}>
+                           {/* <h4 className={cn('product-edit')}>
                               <Checkbox
                                  onChange={() => {
                                     let newProd = {
@@ -935,7 +935,7 @@ function ProductsManager() {
                                     setProductEdit(newProd);
                                  }}
                               />
-                           </h4>
+                           </h4> */}
 
                            <h4 className={cn('product-del')}>
                               <IconButton onClick={() => hanldeRemoveProduct(product.sp_ma)}>
